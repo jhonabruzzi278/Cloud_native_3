@@ -38,7 +38,7 @@ try {
 
     $salida += @('', (& $marca '== Se detiene el consumidor =='))
     & docker @($compose + @('stop', 'consumer')) 2>$null | Out-Null
-    & docker @($compose + @('run', '--rm', '--no-deps', '-e', "PRODUCER_MAX_EVENTS=$Eventos", '-e', 'PRODUCE_INTERVAL=0.1',
+    & docker @($compose + @('run', '--rm', '--no-deps', '--use-aliases', '-e', "PRODUCER_MAX_EVENTS=$Eventos", '-e', 'PRODUCE_INTERVAL=0.1',
         'producer')) 2>$null | Out-Null
     $salida += & $marca "== DURANTE: $Eventos ventas publicadas con el consumidor detenido (lag acumulado) =="
     $salida += Get-Grupo $Proyecto

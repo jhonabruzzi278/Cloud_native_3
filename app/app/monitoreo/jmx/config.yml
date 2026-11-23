@@ -1,0 +1,4 @@
+# Igual que en la guia de scrapeo: publica todos los MBeans. Practico para el laboratorio;
+# con carga real conviene limitar reglas y etiquetas para evitar cardinalidad alta.
+rules:
+  - pattern: ".*"

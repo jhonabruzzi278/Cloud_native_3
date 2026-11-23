@@ -14,7 +14,7 @@ try {
     $tienda = 'Tienda Escenarios ' + (Get-Date).ToUniversalTime().ToString('HHmmss')
 
     $compose = Get-ComposeArgs $Proyecto
-    $producidos = & docker @($compose + @('run', '--rm', '--no-deps', '-e', 'PRODUCER_MODE=escenarios',
+    $producidos = & docker @($compose + @('run', '--rm', '--no-deps', '--use-aliases', '-e', 'PRODUCER_MODE=escenarios',
         '-e', "SCENARIO_STORE=$tienda", 'producer')) 2>$null
     if ($LASTEXITCODE -ne 0) { throw 'El productor de escenarios fallo.' }
     $producidos = @($producidos | Where-Object { $_ -match 'particion=' })

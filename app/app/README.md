@@ -29,7 +29,7 @@ Los DTO son records Java tipados: `Sale` (entrada), `WindowResult` (salida), `Re
 
 - Docker Desktop con Docker Compose v2 en modo de contenedores Linux. Maven y Java 21 se ejecutan dentro de Docker, así que no hace falta instalarlos.
 - Windows PowerShell 5.1 o PowerShell 7 para los scripts de `scripts/`. `probar-validacion.ps1`, el primer script de la EP, requiere PowerShell 7.
-- Unos 3 GB de RAM libres para ZooKeeper, los dos brokers y la aplicación.
+- Unos 3 GB de RAM libres para ZooKeeper, los dos brokers y la aplicación, y 1 GB más con el perfil `monitoreo`.
 
 ## 3. Levantar el sistema
 
@@ -45,13 +45,21 @@ docker compose -p dsy1107-ep5 --env-file .env.example ps -a
 
 ```powershell
 # flujo normal: 80 ventas aleatorias
-docker compose -p dsy1107-ep5 --env-file .env.example run --rm --no-deps -e PRODUCER_MAX_EVENTS=80 producer
+docker compose -p dsy1107-ep5 --env-file .env.example run --rm --no-deps --use-aliases -e PRODUCER_MAX_EVENTS=80 producer
 # ver una venta con su clave y partición, y un agregado confirmado
 docker compose -p dsy1107-ep5 --env-file .env.example exec -T kafka-1 kafka-console-consumer --bootstrap-server kafka-1:9092 --topic ventas-raw --from-beginning --max-messages 1 --property print.key=true --property print.partition=true
 docker compose -p dsy1107-ep5 --env-file .env.example exec -T kafka-1 kafka-console-consumer --bootstrap-server kafka-1:9092 --topic ventas-agregadas --from-beginning --max-messages 3 --isolation-level read_committed --property print.key=true
 ```
 
-Para apagarlo: `docker compose -p dsy1107-ep5 down`. Con `down -v` también se borran los datos.
+`--use-aliases` registra el contenedor como `producer` en la red, y así Prometheus puede leer sus métricas.
+
+Para levantar además Prometheus, Loki, Alloy y Grafana (sección 10), agrega el perfil `monitoreo`:
+
+```powershell
+docker compose -p dsy1107-ep5 --env-file .env.example --profile monitoreo up -d --build
+```
+
+Para apagarlo: `docker compose -p dsy1107-ep5 --profile monitoreo down`. Con `down -v` también se borran los datos.
 
 ### Variables configurables
 
@@ -68,6 +76,9 @@ Todas tienen un valor por defecto en `compose.yaml`, y [.env.example](.env.examp
 | `PRODUCE_INTERVAL` | `1.0` | Segundos entre ventas, con ±30 % de variación |
 | `CUSTOMER_POOL` | `200` | Cantidad de clientes distintos |
 | `SCENARIO_STORE` | `Tienda Escenarios` | Tienda que usa el modo escenarios |
+| `GRAFANA_PORT` | `3300` | Puerto local de Grafana, solo en `127.0.0.1` |
+| `PROMETHEUS_PORT` | `9090` | Puerto local de Prometheus, solo en `127.0.0.1` |
+| `GRAFANA_ADMIN_PASSWORD` | sin defecto | Contraseña del usuario `admin` del Grafana local. El ejemplo trae un marcador que conviene cambiar en un `.env` propio. |
 
 `KAFKA_BOOTSTRAP` y los nombres de los tópicos (`RAW_TOPIC`, `AGG_TOPIC`, `DLQ_TOPIC`, `LATE_TOPIC`) se definen en el bloque `x-app-env` de `compose.yaml`.
 
@@ -199,9 +210,42 @@ Mientras Streams está detenido, el consumer group conserva sus offsets confirma
 | DLQ y tardíos | `kafka-get-offsets` sobre `ventas-raw-dlq` y `ventas-tardias` | Si suben, revisar al productor de origen, sus datos o su reloj. Ajustar la gracia si los tardíos son frecuentes y legítimos. |
 | Estado de Streams | logs `estado Kafka Streams A -> B` y `restauracion …` | Si se queda en `REBALANCING` o `ERROR`, revisar los brokers y el estado local. |
 
-Prometheus, Grafana y Loki se despliegan con la carpeta `monitoring/` del curso, siguiendo las guías *Despliegue Prometheus/Grafana* y *Scrapeo Kafka/ZooKeeper/app*. El agente JMX Exporter se agrega con `JAVA_TOOL_OPTIONS` en los puertos 9404 (brokers), 9405 (ZooKeeper), 9406 (productor) y 9407 (Streams). La imagen de la app no necesita cambios para esto. El dashboard *EA3 – Observabilidad integral* muestra la disponibilidad de los exporters, las particiones subreplicadas y bajo ISR, el lag de Streams, los hilos vivos y fallidos, y los envíos y errores del productor.
+### Monitoreo local con Grafana
 
-**Métricas de negocio:** no hay contadores Prometheus propios para rechazos por motivo ni para tardíos. La evidencia equivalente está en los offsets de `ventas-raw-dlq` y `ventas-tardias`, en los logs `WARN` (consultables en Loki con `{service="consumer"} |= "venta rechazada"`) y en la métrica JMX de Streams `dropped-records-total`.
+Cada JVM publica sus MBeans en HTTP `/metrics` mediante el agente JMX Exporter 1.0.1 (Maven Central, regla `.*` en [monitoreo/jmx/config.yml](monitoreo/jmx/config.yml)). Los puertos son 9404 en los brokers, 9405 en ZooKeeper, 9406 en el productor y 9407 en Streams. El agente viene dentro de la imagen de la app, y el servicio `jmx-agent` lo copia a un volumen que montan ZooKeeper y los brokers. En esos dos servicios, `KAFKA_OPTS` se exporta solo para el proceso del servidor: así el healthcheck y los `docker compose exec kafka-1 kafka-…` no intentan abrir un segundo exporter en el mismo puerto.
+
+Con el perfil `monitoreo` (sección 3):
+
+| Componente | Acceso | Contenido |
+| --- | --- | --- |
+| Grafana | http://127.0.0.1:3300 (anónimo con rol Editor, que permite usar Explore) | Dashboard de inicio **EP5 - Kafka ventas (local)**, en la carpeta *Ventas Lab* |
+| Prometheus | http://127.0.0.1:9090/targets | Jobs `kafka-brokers`, `zookeeper` y `ventas-app` ([monitoreo/prometheus.yml](monitoreo/prometheus.yml)) |
+| Loki + Alloy | desde Grafana (fuente *Loki*) | Logs de los contenedores de este proyecto Compose ([monitoreo/alloy.alloy](monitoreo/alloy.alloy)) |
+
+El [dashboard local](monitoreo/grafana/dashboards/ep5-local.json) es el *EA3 – Observabilidad integral* del curso, con las IP de EC2 reemplazadas por los nombres de servicio Docker. Además agrega una fila **EP5** con estos paneles:
+
+- mensajes por segundo en `ventas-raw`, `ventas-agregadas`, `ventas-raw-dlq` y `ventas-tardias`;
+- lag de Streams por partición;
+- particiones subreplicadas y bajo `min.insync` por broker, junto con la cantidad de líderes;
+- registros procesados y descartados por Streams (`dropped-records`);
+- logs de rechazos y duplicados;
+- logs de eventos tardíos, fuera de orden y restauraciones.
+
+Verificación (23-11-2026):
+
+- Los 6 targets de Prometheus quedaron `up`.
+- Todas las consultas del dashboard devolvieron datos después de ejecutar `probar-escenarios.ps1` y `probar-caida-broker.ps1`.
+- Durante la caída de `kafka-2`, el panel de ISR mostró el salto de `UnderReplicatedPartitions` en `kafka-1`, que volvió a 0 al reiniciar.
+
+Los indicadores *Exporters disponibles (de 5)* y *Procesos de la app (de 2)* cuentan también al productor, que solo existe mientras corre `docker compose run`. Fuera de esas ejecuciones marcan 4 y 1, en rojo.
+
+La versión EC2 del curso se despliega aparte con la carpeta `monitoring/`, siguiendo las guías *Despliegue Prometheus/Grafana* y *Scrapeo Kafka/ZooKeeper/app*, y usa el mismo agente con `JAVA_TOOL_OPTIONS`.
+
+**Métricas de negocio:** no hay contadores Prometheus propios para rechazos por motivo ni para tardíos. Para mostrarlos se usa:
+
+- la tasa de mensajes por tópico de `ventas-raw-dlq` y `ventas-tardias`, en el panel de la fila EP5;
+- los logs `WARN` en Loki, por ejemplo `{service="consumer"} |= "venta rechazada"`;
+- la métrica JMX de Streams `kafka_streams_stream_task_metrics_dropped_records`.
 
 ## 11. Límites conocidos
 
@@ -222,9 +266,10 @@ Prometheus, Grafana y Loki se despliegan con la carpeta `monitoring/` del curso,
 | Kafka Streams caído o reiniciado | `docker compose -p <p> --env-file .env.example up -d consumer` y esperar el log `-> RUNNING`. Verificar lag 0 con `kafka-consumer-groups`. |
 | Estado local corrupto | `docker compose -p <p> rm -sf consumer` y `docker volume rm <p>_streams-state`, luego `up -d consumer`. Los stores se reconstruyen desde los changelogs. |
 | ZooKeeper caído | `docker compose -p <p> --env-file .env.example start zookeeper`. Los brokers se reconectan solos. Revisar el ISR. |
+| Broker sale con `NodeExists` al recrear ZooKeeper | ZooKeeper todavía conserva el registro efímero de la sesión anterior. Los brokers tienen `restart: on-failure`, así que se reintentan solos cuando la sesión expira (unos 18 s). Si no, ejecutar `up -d` de nuevo. |
 | Registros en la DLQ | Revisar `reason` y `detail`, corregir el JSON y volver a publicarlo en `ventas-raw` con la misma clave (sección 5). |
 | Reprocesar desde cero (cambio de topología) | Detener `consumer` y ejecutar `kafka-streams-application-reset --application-id ventas-aggregator-ep5 --input-topics ventas-raw --bootstrap-server kafka-1:9092` dentro de `kafka-1`. Luego borrar el volumen `streams-state` y volver a levantarlo. Otra opción es usar un `GROUP_ID` nuevo. |
 
 ## 13. Secretos
 
-El repositorio no tiene credenciales. `.env.example` solo trae parámetros funcionales, y `.gitignore` excluye `.env` y `*.env` (excepto el ejemplo). El clúster local usa `PLAINTEXT` sin autenticación y no publica puertos al host, así que todo el acceso es por `docker compose exec`. En la versión EC2, la contraseña de Grafana va en `monitoring.env`, que no se versiona.
+El repositorio no tiene credenciales. `.env.example` solo trae parámetros funcionales, y `.gitignore` excluye `.env` y `*.env` (excepto el ejemplo). El clúster local usa `PLAINTEXT` sin autenticación y no publica puertos de Kafka al host, así que todo el acceso es por `docker compose exec`. Grafana y Prometheus solo escuchan en `127.0.0.1`. `GRAFANA_ADMIN_PASSWORD` en `.env.example` es un marcador local; para cualquier otro uso, define una contraseña propia en un `.env` que no se versiona. En la versión EC2, la contraseña de Grafana va en `monitoring.env`, que no se versiona.

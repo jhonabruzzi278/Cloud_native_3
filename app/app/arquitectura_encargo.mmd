@@ -34,7 +34,7 @@ flowchart LR
 
     subgraph obs["Observabilidad"]
         cli["CLI: kafka-topics, kafka-consumer-groups<br/>scripts/*.ps1"]
-        prom["Prometheus + Grafana + Loki<br/>(carpeta monitoring, JMX 9404-9407)"]
+        prom["Perfil monitoreo: Prometheus + Grafana :3300 + Loki/Alloy<br/>JMX Exporter 9404 brokers · 9405 ZK · 9406 productor · 9407 Streams"]
     end
     cluster -.-> cli
     streams -.-> prom

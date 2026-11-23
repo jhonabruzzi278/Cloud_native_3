@@ -21,7 +21,7 @@ try {
     $salida += @('', 'Offsets de ventas-raw antes:') + $offsetsAntes
 
     # Productor aleatorio en segundo plano (acks=all, idempotente, reintentos infinitos).
-    $productor = (& docker @($compose + @('run', '-d', '--no-deps', '-e', "PRODUCER_MAX_EVENTS=$Eventos",
+    $productor = (& docker @($compose + @('run', '-d', '--no-deps', '--use-aliases', '-e', "PRODUCER_MAX_EVENTS=$Eventos",
         '-e', 'PRODUCE_INTERVAL=0.5', 'producer')) 2>$null | Select-Object -Last 1).Trim()
     if ($LASTEXITCODE -ne 0 -or -not $productor) { throw 'No se pudo iniciar el productor.' }
     Start-Sleep -Seconds 8

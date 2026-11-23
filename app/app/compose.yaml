@@ -2,9 +2,17 @@ name: dsy1107-ventas
 
 x-broker: &broker
   image: confluentinc/cp-kafka:7.6.14
+  # Si ZooKeeper aun conserva el registro efimero de una sesion anterior (NodeExists), el broker sale con
+  # codigo 1 y Docker lo reintenta cuando la sesion expira (~18 s). "docker compose stop" no lo reinicia.
+  restart: on-failure:10
   depends_on:
     zookeeper:
       condition: service_healthy
+    jmx-agent:
+      condition: service_completed_successfully
+  # El agente JMX se exporta solo para el proceso del broker. Asi "docker compose exec kafka-1 kafka-topics ..."
+  # y el healthcheck no intentan abrir un segundo exporter en el mismo puerto.
+  command: ["bash", "-c", "export KAFKA_OPTS=\"-javaagent:/opt/jmx/jmx_prometheus_javaagent.jar=9404:/opt/jmx/config.yml\"; exec /etc/confluent/docker/run"]
   healthcheck:
     test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
     interval: 10s
@@ -43,14 +51,27 @@ x-app-env: &app-env
   DEDUP_RETENTION_HOURS: ${DEDUP_RETENTION_HOURS:-24}
 
 services:
+  # Copia el agente JMX Exporter y su config desde la imagen de la app a un volumen que montan ZooKeeper y brokers.
+  jmx-agent:
+    image: dsy1107-ventas-app:local
+    build: .
+    command: ["sh", "-c", "cp /opt/jmx/* /jmx/"]
+    volumes:
+      - jmx-agent:/jmx
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.14
+    depends_on:
+      jmx-agent:
+        condition: service_completed_successfully
+    command: ["bash", "-c", "export KAFKA_OPTS=\"-javaagent:/opt/jmx/jmx_prometheus_javaagent.jar=9405:/opt/jmx/config.yml\"; exec /etc/confluent/docker/run"]
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     volumes:
       - zookeeper-data:/var/lib/zookeeper/data
       - zookeeper-log:/var/lib/zookeeper/log
+      - jmx-agent:/opt/jmx:ro
     healthcheck:
       test: ["CMD-SHELL", "cub zk-ready localhost 2181 >/dev/null 2>&1"]
       interval: 5s
@@ -65,6 +86,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092
     volumes:
       - kafka-1-data:/var/lib/kafka/data
+      - jmx-agent:/opt/jmx:ro
 
   kafka-2:
     <<: *broker
@@ -74,6 +96,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092
     volumes:
       - kafka-2-data:/var/lib/kafka/data
+      - jmx-agent:/opt/jmx:ro
 
   topics:
     image: confluentinc/cp-kafka:7.6.14
@@ -95,6 +118,7 @@ services:
     environment:
       <<: *app-env
       STREAMS_STATE_DIR: /var/lib/streams
+      JAVA_TOOL_OPTIONS: -javaagent:/opt/jmx/jmx_prometheus_javaagent.jar=9407:/opt/jmx/config.yml
     volumes:
       - streams-state:/var/lib/streams
 
@@ -108,9 +132,68 @@ services:
       PRODUCER_MAX_EVENTS: ${PRODUCER_MAX_EVENTS:-0}
       CUSTOMER_POOL: ${CUSTOMER_POOL:-200}
       PRODUCER_MODE: ${PRODUCER_MODE:-aleatorio}
+      JAVA_TOOL_OPTIONS: -javaagent:/opt/jmx/jmx_prometheus_javaagent.jar=9406:/opt/jmx/config.yml
       SCENARIO_STORE: ${SCENARIO_STORE:-Tienda Escenarios}
 
+  # Perfil "monitoreo": docker compose --profile monitoreo up -d
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: [monitoreo]
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+    volumes:
+      - ./monitoreo/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+
+  loki:
+    image: grafana/loki:3.7.0
+    profiles: [monitoreo]
+    command: [-config.file=/etc/loki/loki.yaml]
+    volumes:
+      - ../../monitoring/monitoring/loki.yaml:/etc/loki/loki.yaml:ro
+      - loki-data:/loki
+
+  alloy:
+    image: grafana/alloy:v1.21.3
+    profiles: [monitoreo]
+    command: [run, --storage.path=/var/lib/alloy/data, /etc/alloy/config.alloy]
+    environment:
+      COMPOSE_PROJECT: ${COMPOSE_PROJECT_NAME}
+    volumes:
+      - ./monitoreo/alloy.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - alloy-data:/var/lib/alloy/data
+    depends_on: [loki]
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    profiles: [monitoreo]
+    environment:
+      # Solo escucha en 127.0.0.1. El acceso anonimo con rol Editor permite usar Explore sin credenciales.
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Editor
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?define GRAFANA_ADMIN_PASSWORD en .env.example o .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/ep5-local.json
+    volumes:
+      - ../../monitoring/monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./monitoreo/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./monitoreo/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3300}:3000"
+    depends_on: [prometheus, loki]
+
 volumes:
+  jmx-agent:
+  prometheus-data:
+  loki-data:
+  alloy-data:
+  grafana-data:
   zookeeper-data:
   zookeeper-log:
   kafka-1-data:
