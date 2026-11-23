@@ -35,6 +35,8 @@ Flujo de ventas en tiempo real con Kafka (dos brokers y ZooKeeper) y Kafka Strea
 
 ## 1. Inicio rápido
 
+> ¿Un término no te resulta familiar (RF, ISR, `acks`, `min.insync.replicas`, lag, ventana, DLQ…)? Está explicado en el [glosario](#15-glosario-de-conceptos), con el valor que usa este proyecto.
+
 Requisito: Docker Desktop con contenedores Linux. Desde esta carpeta (`app/app`), en PowerShell:
 
 ```powershell
@@ -157,6 +159,8 @@ Configuración de los brokers en `compose.yaml`:
 - `offsets.topic.replication.factor=2`;
 - `transaction.state.log.replication.factor=2` y `transaction.state.log.min.isr=1`;
 - `auto.create.topics.enable=false`, para que un error de tipeo no cree un tópico con RF 1.
+
+Qué significan RF, ISR, `acks` y `min.insync.replicas`, y cómo se combinan: [Replicación explicada paso a paso](#replicación-explicada-paso-a-paso).
 
 **Por qué RF 2 y no 3:** el factor de replicación no puede superar la cantidad de brokers. Con dos brokers, RF 3 falla al crear el tópico (`InvalidReplicationFactorException`). Con RF 2, cada partición tiene una copia en cada broker.
 
@@ -414,7 +418,54 @@ app/app/
 
 ## 15. Glosario de conceptos
 
-Explicación breve de cada término que aparece en este documento, con el valor que usa este proyecto.
+Explicación de cada término que aparece en este documento, con el valor que usa este proyecto. Los cuatro conceptos de replicación, que son los que más se preguntan en la defensa, se explican primero en detalle; después vienen las tablas por tema.
+
+### Replicación explicada paso a paso
+
+**RF (factor de replicación) = cuántas copias hay de cada partición.**
+Con RF 2, cada partición se guarda en 2 brokers distintos. En este proyecto hay 2 brokers, así que cada partición tiene una copia en `kafka-1` y otra en `kafka-2`:
+
+| Partición de `ventas-raw` | Copia líder | Copia seguidora |
+| --- | --- | --- |
+| 0 | broker 2 | broker 1 |
+| 1 | broker 1 | broker 2 |
+| 2 | broker 2 | broker 1 |
+| 3 | broker 1 | broker 2 |
+
+- **Líder:** la copia que atiende las lecturas y escrituras.
+- **Seguidora:** la copia que se mantiene al día copiando del líder.
+- **Para qué sirve:** si cae un broker, la otra copia asume como líder y no se pierden datos.
+- **Por qué 2 y no 3:** cada copia debe estar en un broker distinto, así que el RF no puede superar la cantidad de brokers. Con 2 brokers, Kafka rechaza RF 3.
+
+**ISR (in-sync replicas) = las copias que están al día con el líder.**
+En normalidad, el ISR de cada partición es `1,2`: ambas copias tienen los mismos mensajes. Si un broker se cae o se atrasa, sale del ISR. En la prueba, al detener `kafka-2` el ISR quedó en `1`, y cuando el broker volvió y copió lo que le faltaba, regresó a `1,2` en 8 s.
+
+**`acks` = cuántas copias deben confirmar un mensaje antes de darlo por escrito.** Lo configura el productor:
+
+| Valor | El productor espera a… | Riesgo |
+| --- | --- | --- |
+| `acks=0` | Nadie: envía y sigue | Puede perder mensajes sin enterarse |
+| `acks=1` | Solo al líder | Si el líder cae antes de copiar, el mensaje se pierde |
+| `acks=all` (este proyecto) | Todas las copias del ISR | El más seguro: el mensaje está en todas las copias sincronizadas |
+
+**`min.insync.replicas` = el mínimo de copias que debe tener el ISR para aceptar una escritura con `acks=all`.**
+Funciona como un piso de seguridad que fija el broker. Si el ISR tiene menos copias que ese mínimo, el broker rechaza la escritura con el error `NotEnoughReplicas`.
+
+| Configuración | Con ambos brokers vivos | Con un broker caído (ISR = 1) |
+| --- | --- | --- |
+| RF 2 y `min.insync.replicas=2` | Escribe en 2 copias | **Rechaza las escrituras**: el sistema deja de recibir ventas |
+| RF 2 y `min.insync.replicas=1` (este proyecto) | Escribe en 2 copias | **Sigue escribiendo** en la única copia viva |
+
+Se eligió 1 para priorizar la **disponibilidad**: el sistema sigue recibiendo ventas aunque caiga un broker, como mostró la prueba (60 de 60 ventas confirmadas). El costo es la **durabilidad**: mientras dura la caída, cada venta existe en un solo disco, y si ese broker también fallara se perderían las ventas aún no replicadas.
+
+**Cómo se combinan los cuatro:** el productor envía con `acks=all`. El líder espera a todas las copias del ISR, y el ISR debe tener al menos `min.insync.replicas` copias. Con RF 2 y `min.insync.replicas=1`, se tolera la caída de un broker sin dejar de escribir. La configuración recomendada con 3 brokers es RF 3 y `min.insync.replicas=2`: tolera la caída de un broker **y** mantiene siempre al menos 2 copias de cada venta.
+
+**En una frase, para la defensa:**
+
+- **RF 2:** cada partición tiene dos copias, una por broker.
+- **ISR:** son las copias que están al día.
+- **`acks=all`:** espera a todas las copias del ISR.
+- **`min.insync.replicas=1`:** permite seguir escribiendo con una sola copia viva, a cambio de no tener respaldo mientras dure la caída.
 
 ### Kafka y el clúster
 
