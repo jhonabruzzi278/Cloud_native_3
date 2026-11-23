@@ -1,0 +1,118 @@
+name: dsy1107-ventas
+
+x-broker: &broker
+  image: confluentinc/cp-kafka:7.6.14
+  depends_on:
+    zookeeper:
+      condition: service_healthy
+  healthcheck:
+    test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+    interval: 10s
+    timeout: 8s
+    retries: 12
+    start_period: 20s
+
+x-broker-env: &broker-env
+  KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+  KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  KAFKA_DEFAULT_REPLICATION_FACTOR: 2
+  KAFKA_MIN_INSYNC_REPLICAS: 1
+  KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+  KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+  KAFKA_HEAP_OPTS: -Xms256m -Xmx512m
+
+x-app: &app
+  image: dsy1107-ventas-app:local
+  build: .
+  depends_on:
+    topics:
+      condition: service_completed_successfully
+
+x-app-env: &app-env
+  KAFKA_BOOTSTRAP: kafka-1:9092,kafka-2:9092
+  RAW_TOPIC: ventas-raw
+  AGG_TOPIC: ventas-agregadas
+  DLQ_TOPIC: ventas-raw-dlq
+  LATE_TOPIC: ventas-tardias
+  GROUP_ID: ${GROUP_ID:-ventas-aggregator-ep5}
+  WINDOW_SECONDS: ${WINDOW_SECONDS:-60}
+  WINDOW_GRACE_SECONDS: ${WINDOW_GRACE_SECONDS:-30}
+  DEDUP_RETENTION_HOURS: ${DEDUP_RETENTION_HOURS:-24}
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.14
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD-SHELL", "cub zk-ready localhost 2181 >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  kafka-1:
+    <<: *broker
+    environment:
+      <<: *broker-env
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092
+    volumes:
+      - kafka-1-data:/var/lib/kafka/data
+
+  kafka-2:
+    <<: *broker
+    environment:
+      <<: *broker-env
+      KAFKA_BROKER_ID: 2
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092
+    volumes:
+      - kafka-2-data:/var/lib/kafka/data
+
+  topics:
+    image: confluentinc/cp-kafka:7.6.14
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+    entrypoint: [/bin/bash, -ec]
+    command:
+      - |
+        kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092 --create --if-not-exists --topic ventas-raw --partitions 4 --replication-factor 2 --config min.insync.replicas=1 --config retention.ms=604800000
+        kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092 --create --if-not-exists --topic ventas-agregadas --partitions 2 --replication-factor 2 --config min.insync.replicas=1 --config retention.ms=604800000
+        kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092 --create --if-not-exists --topic ventas-raw-dlq --partitions 4 --replication-factor 2 --config min.insync.replicas=1 --config retention.ms=1209600000
+        kafka-topics --bootstrap-server kafka-1:9092,kafka-2:9092 --create --if-not-exists --topic ventas-tardias --partitions 2 --replication-factor 2 --config min.insync.replicas=1 --config retention.ms=1209600000
+
+  consumer:
+    <<: *app
+    environment:
+      <<: *app-env
+      STREAMS_STATE_DIR: /var/lib/streams
+    volumes:
+      - streams-state:/var/lib/streams
+
+  producer:
+    <<: *app
+    profiles: [demo]
+    command: [java, -cp, /app/app.jar, cl.duoc.ventas.ProducerApp]
+    environment:
+      <<: *app-env
+      PRODUCE_INTERVAL: ${PRODUCE_INTERVAL:-1.0}
+      PRODUCER_MAX_EVENTS: ${PRODUCER_MAX_EVENTS:-0}
+      CUSTOMER_POOL: ${CUSTOMER_POOL:-200}
+      PRODUCER_MODE: ${PRODUCER_MODE:-aleatorio}
+      SCENARIO_STORE: ${SCENARIO_STORE:-Tienda Escenarios}
+
+volumes:
+  zookeeper-data:
+  zookeeper-log:
+  kafka-1-data:
+  kafka-2-data:
+  streams-state:

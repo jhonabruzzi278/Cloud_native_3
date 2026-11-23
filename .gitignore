@@ -1,0 +1,19 @@
+# Material del curso (no se redistribuye)
+*.pdf
+
+# Restos de zips creados en macOS
+__MACOSX/
+.DS_Store
+
+# Secretos y configuracion local: solo se versionan los *.example
+.env
+*.env
+!*.env.example
+!.env.example
+
+# Compilacion y herramientas
+target/
+*.class
+.idea/
+.vscode/
+*.iml

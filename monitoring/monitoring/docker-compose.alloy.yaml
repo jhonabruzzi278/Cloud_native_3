@@ -1,0 +1,22 @@
+name: grafana-alloy
+
+services:
+  alloy:
+    image: grafana/alloy:v1.21.3
+    container_name: grafana-alloy
+    restart: unless-stopped
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    environment:
+      NODE_NAME: ${NODE_NAME:?define NODE_NAME in alloy.env}
+      LOKI_URL: ${LOKI_URL:?define LOKI_URL in alloy.env}
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - alloy-data:/var/lib/alloy/data
+
+volumes:
+  alloy-data:

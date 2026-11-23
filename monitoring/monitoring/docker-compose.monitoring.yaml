@@ -1,0 +1,58 @@
+name: ventas-monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: prometheus
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - /etc/prometheus/prometheus-entrypoint.sh
+    command:
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+    environment:
+      KAFKA_1_PRIVATE_IP: ${KAFKA_1_PRIVATE_IP:?define KAFKA_1_PRIVATE_IP in monitoring.env}
+      KAFKA_2_PRIVATE_IP: ${KAFKA_2_PRIVATE_IP:?define KAFKA_2_PRIVATE_IP in monitoring.env}
+      ZOOKEEPER_PRIVATE_IP: ${ZOOKEEPER_PRIVATE_IP:?define ZOOKEEPER_PRIVATE_IP in monitoring.env}
+      APP_PRIVATE_IP: ${APP_PRIVATE_IP:?define APP_PRIVATE_IP in monitoring.env}
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus-entrypoint.sh:/etc/prometheus/prometheus-entrypoint.sh:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  loki:
+    image: grafana/loki:3.7.0
+    container_name: loki
+    restart: unless-stopped
+    command:
+      - -config.file=/etc/loki/loki.yaml
+    volumes:
+      - ./loki.yaml:/etc/loki/loki.yaml:ro
+      - loki-data:/loki
+    ports:
+      - "${MONITORING_PRIVATE_IP:?define MONITORING_PRIVATE_IP in monitoring.env}:3100:3100"
+
+  grafana:
+    image: grafana/grafana:12.1.1
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?define GRAFANA_ADMIN_PASSWORD in monitoring.env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+
+volumes:
+  loki-data:
+  prometheus-data:
+  grafana-data:

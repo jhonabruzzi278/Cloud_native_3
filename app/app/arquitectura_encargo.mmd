@@ -1,0 +1,40 @@
+flowchart LR
+    producer["Productor Java<br/>acks=all · idempotente<br/>modo aleatorio o escenarios"] -->|"JSON Sale · clave customerId"| raw
+
+    subgraph cluster["Clúster local: 2 brokers + 1 ZooKeeper (punto único de falla)"]
+        zk[ZooKeeper único] --- broker1[Broker 1]
+        zk --- broker2[Broker 2]
+        raw["ventas-raw<br/>4 particiones · RF 2 · min.isr 1 · 7 días"]
+        dlq["ventas-raw-dlq<br/>4 particiones · RF 2 · 14 días<br/>clave customerId"]
+        late["ventas-tardias<br/>2 particiones · RF 2 · 14 días<br/>clave store"]
+        repartition["por-tienda-repartition (interno)<br/>4 particiones · RF 2 · clave store"]
+        changelogs["Changelogs internos RF 2<br/>event-ids-vistos · tiempo-observado<br/>ventas-por-tienda · cierre-de-ventana"]
+        aggregated["ventas-agregadas<br/>2 particiones · RF 2 · 7 días<br/>clave store"]
+    end
+
+    subgraph streams["Kafka Streams · application.id ventas-aggregator-ep5 · exactly_once_v2"]
+        validation["1 validar-venta<br/>JSON, campos, clave, total, eventTime"]
+        dedup["2 deduplicar-eventId<br/>WindowStore 24 h"]
+        timing["3 clasificar-tiempo<br/>ventana 60 s · gracia 30 s"]
+        windows["4 ventanas tumbling por tienda<br/>suppress hasta cierre"]
+    end
+
+    raw --> validation
+    validation -->|"inválido: original, clave, tópico, partición, offset, motivo"| dlq
+    validation -->|"válido · timestamp = eventTime"| dedup
+    dedup -->|"EVENTO_DUPLICADO + referencia al primero"| dlq
+    dedup -->|"rekey a store"| repartition
+    repartition --> timing
+    timing -->|"FUERA_DE_GRACIA (válido, no se mezcla con DLQ)"| late
+    timing -->|"a tiempo o dentro de gracia"| windows
+    dedup <-.-> changelogs
+    timing <-.-> changelogs
+    windows <-.-> changelogs
+    windows -->|"window_start, window_end, sales_count, total_clp, avg_ticket_clp"| aggregated
+
+    subgraph obs["Observabilidad"]
+        cli["CLI: kafka-topics, kafka-consumer-groups<br/>scripts/*.ps1"]
+        prom["Prometheus + Grafana + Loki<br/>(carpeta monitoring, JMX 9404-9407)"]
+    end
+    cluster -.-> cli
+    streams -.-> prom

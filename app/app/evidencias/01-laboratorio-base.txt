@@ -1,0 +1,57 @@
+Estado inicial de Docker Compose
+> docker compose --env-file .env.example ps -a
+NAME                         IMAGE                              COMMAND                  SERVICE     CREATED          STATUS                     PORTS
+dsy1107-ventas-consumer-1    dsy1107-ventas-app:local           "/__cacert_entrypoin…"   consumer    21 seconds ago   Up 3 seconds               
+dsy1107-ventas-kafka-1-1     confluentinc/cp-kafka:7.6.14       "/etc/confluent/dock…"   kafka-1     21 seconds ago   Up 14 seconds (healthy)    9092/tcp
+dsy1107-ventas-kafka-2-1     confluentinc/cp-kafka:7.6.14       "/etc/confluent/dock…"   kafka-2     21 seconds ago   Up 14 seconds (healthy)    9092/tcp
+dsy1107-ventas-topics-1      confluentinc/cp-kafka:7.6.14       "/bin/bash -ec 'kafk…"   topics      21 seconds ago   Exited (0) 3 seconds ago   
+dsy1107-ventas-zookeeper-1   confluentinc/cp-zookeeper:7.6.14   "/etc/confluent/dock…"   zookeeper   22 seconds ago   Up 20 seconds (healthy)    2181/tcp, 2888/tcp, 3888/tcp
+
+> docker compose exec -T kafka-1 kafka-topics --bootstrap-server kafka-1:9092 --describe --topic ventas-.*
+Topic: ventas-agregadas	TopicId: 8C6eRY7ZQaKo9dyrMQpAzQ	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+	Topic: ventas-agregadas	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-agregadas	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-aggregator-ventas-por-tienda-repartition	TopicId: lvtIzyLJRU6rNlOyx3S7Yw	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,cleanup.policy=delete,segment.bytes=52428800,retention.ms=-1,message.timestamp.type=CreateTime
+	Topic: ventas-aggregator-ventas-por-tienda-repartition	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-aggregator-ventas-por-tienda-repartition	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-aggregator-ventas-por-tienda-repartition	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-aggregator-ventas-por-tienda-repartition	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-raw	TopicId: ONjdMQS7T4CCVv6GsAzjZQ	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+	Topic: ventas-raw	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-aggregator-KTABLE-SUPPRESS-STATE-STORE-0000000009-changelog	TopicId: K0sWchNoQR6Mbci-7AS5Fg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,cleanup.policy=compact,message.timestamp.type=CreateTime
+	Topic: ventas-aggregator-KTABLE-SUPPRESS-STATE-STORE-0000000009-changelog	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-aggregator-KTABLE-SUPPRESS-STATE-STORE-0000000009-changelog	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-aggregator-KTABLE-SUPPRESS-STATE-STORE-0000000009-changelog	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-aggregator-KTABLE-SUPPRESS-STATE-STORE-0000000009-changelog	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-aggregator-ventas-por-tienda-changelog	TopicId: QaLGGOUcROK40J8tnQ-ibQ	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,cleanup.policy=compact,delete,retention.ms=86460000,message.timestamp.type=CreateTime
+	Topic: ventas-aggregator-ventas-por-tienda-changelog	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-aggregator-ventas-por-tienda-changelog	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-aggregator-ventas-por-tienda-changelog	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-aggregator-ventas-por-tienda-changelog	Partition: 3	Leader: 2	Replicas: 2,1	Isr: 2,1
+
+> docker compose --env-file .env.example run --rm --no-deps -e PRODUCER_MAX_EVENTS=80 producer
+produciendo ventas en 'ventas-raw' via kafka-1:9092,kafka-2:9092 (intervalo 1.00s, max 80)
+{"eventId":"a05cb767-98ec-4729-a1c2-2caa27d45d35","eventTime":"2026-11-23T12:06:52.247456772Z","store":"Falabella Costanera Center","storeFormat":"tienda","city":"Santiago","channel":"presencial","category":"ropa","product":"Chaqueta cortaviento","quantity":3,"unitPriceClp":44193,"totalClp":132579,"customerId":"cliente-0010","paymentMethod":"crédito"}
+{"eventId":"fcc66bd3-291c-4f13-bb96-3655c5238087","eventTime":"2026-11-23T12:06:53.782717382Z","store":"Paris Costanera Center","storeFormat":"tienda","city":"Santiago","channel":"presencial","category":"ropa","product":"Polera algodón","quantity":2,"unitPriceClp":24684,"totalClp":49368,"customerId":"cliente-0183","paymentMethod":"efectivo"}
+producer detenido tras 80 eventos
+
+> kafka-console-consumer --topic ventas-raw --from-beginning --max-messages 1 --property print.key=true --property print.partition=true
+Partition:1	cliente-0010	{"eventId":"a05cb767-98ec-4729-a1c2-2caa27d45d35","eventTime":"2026-11-23T12:06:52.247456772Z","store":"Falabella Costanera Center","storeFormat":"tienda","city":"Santiago","channel":"presencial","category":"ropa","product":"Chaqueta cortaviento","quantity":3,"unitPriceClp":44193,"totalClp":132579,"customerId":"cliente-0010","paymentMethod":"crédito"}
+
+> kafka-console-consumer --topic ventas-agregadas --from-beginning --max-messages 1 --isolation-level read_committed --property print.key=true
+Paris Costanera Center	{"store":"Paris Costanera Center","window_start":"2026-11-23T12:06:00Z","window_end":"2026-11-23T12:07:00Z","sales_count":2,"total_clp":128067,"avg_ticket_clp":64034}
+
+> kafka-consumer-groups --describe --group ventas-aggregator
+
+GROUP             TOPIC                                           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                                         HOST            CLIENT-ID
+ventas-aggregator ventas-raw                                      1          21              21              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-aggregator-ventas-por-tienda-repartition 3          93              93              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-raw                                      2          21              21              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-raw                                      3          21              21              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-aggregator-ventas-por-tienda-repartition 1          52              52              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-aggregator-ventas-por-tienda-repartition 2          -               0               -               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-aggregator-ventas-por-tienda-repartition 0          12              12              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
+ventas-aggregator ventas-raw                                      0          17              17              0               ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer-c4e1221d-fcf7-44a5-98fd-b21bef6fe915 /172.20.0.5     ventas-aggregator-718009a8-b609-4bc1-9c76-3444f0647524-StreamThread-1-consumer
