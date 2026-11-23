@@ -1,240 +1,249 @@
 ﻿ Image dsy1107-ventas-app:local Building 
 #1 [internal] load local bake definitions
-#1 reading from stdin 552B 0.0s done
+#1 reading from stdin 1.05kB 0.0s done
 #1 DONE 0.0s
 
 #2 [internal] load build definition from Dockerfile
-#2 transferring dockerfile: 342B done
+#2 transferring dockerfile: 752B 0.0s done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/maven:3.9-eclipse-temurin-21
 #3 DONE 0.0s
 
 #4 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre
-#4 DONE 0.7s
+#4 DONE 1.0s
 
 #5 [internal] load .dockerignore
-#5 transferring context: 48B done
+#5 transferring context: 48B 0.0s done
 #5 DONE 0.0s
 
-#6 [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d77e090ae1f6970c047b443c6f0a6c1358b0426d44432bb5a7753408cd43de0d
-#6 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d77e090ae1f6970c047b443c6f0a6c1358b0426d44432bb5a7753408cd43de0d 0.0s done
+#6 [build 1/7] FROM docker.io/library/maven:3.9-eclipse-temurin-21@sha256:99e61abcff91a9b1333463bd8451fb18495d6eba9250ac66a338b518f8278320
+#6 resolve docker.io/library/maven:3.9-eclipse-temurin-21@sha256:99e61abcff91a9b1333463bd8451fb18495d6eba9250ac66a338b518f8278320 0.0s done
 #6 DONE 0.0s
 
-#7 [build 1/6] FROM docker.io/library/maven:3.9-eclipse-temurin-21@sha256:99e61abcff91a9b1333463bd8451fb18495d6eba9250ac66a338b518f8278320
-#7 resolve docker.io/library/maven:3.9-eclipse-temurin-21@sha256:99e61abcff91a9b1333463bd8451fb18495d6eba9250ac66a338b518f8278320 0.0s done
-#7 DONE 0.0s
+#7 [build 2/7] WORKDIR /src
+#7 CACHED
 
-#8 [internal] load build context
-#8 transferring context: 10.02kB 0.0s done
+#8 [stage-1 1/5] FROM docker.io/library/eclipse-temurin:21-jre@sha256:d77e090ae1f6970c047b443c6f0a6c1358b0426d44432bb5a7753408cd43de0d
+#8 resolve docker.io/library/eclipse-temurin:21-jre@sha256:d77e090ae1f6970c047b443c6f0a6c1358b0426d44432bb5a7753408cd43de0d 0.0s done
 #8 DONE 0.0s
 
-#9 [build 2/6] WORKDIR /src
+#9 [stage-1 2/5] WORKDIR /app
 #9 CACHED
 
-#10 [build 3/6] COPY pom.xml .
-#10 CACHED
+#10 [internal] load build context
+#10 transferring context: 1.34kB done
+#10 DONE 0.0s
 
-#11 [build 4/6] RUN mvn -q -B dependency:go-offline
-#11 CACHED
+#11 [build 3/7] COPY pom.xml .
+#11 DONE 0.0s
 
-#12 [build 5/6] COPY src ./src
-#12 DONE 0.0s
+#12 [build 4/7] RUN mvn -q -B dependency:go-offline
+#12 DONE 21.5s
 
-#13 [build 6/6] RUN mvn -B -ntp verify
-#13 1.332 [INFO] Scanning for projects...
-#13 1.396 [INFO] 
-#13 1.396 [INFO] -------------------------< cl.duoc:ventas-lab >-------------------------
-#13 1.396 [INFO] Building ventas-lab 1.0.0
-#13 1.396 [INFO]   from pom.xml
-#13 1.396 [INFO] --------------------------------[ jar ]---------------------------------
-#13 1.666 [INFO] 
-#13 1.666 [INFO] --- resources:3.4.0:resources (default-resources) @ ventas-lab ---
-#13 1.801 [INFO] skip non existing resourceDirectory /src/src/main/resources
-#13 1.801 [INFO] 
-#13 1.802 [INFO] --- compiler:3.13.0:compile (default-compile) @ ventas-lab ---
-#13 1.931 [INFO] Recompiling the module because of changed source code.
-#13 1.937 [INFO] Compiling 11 source files with javac [debug release 21] to target/classes
-#13 3.019 [INFO] 
-#13 3.019 [INFO] --- resources:3.4.0:testResources (default-testResources) @ ventas-lab ---
-#13 3.024 [INFO] skip non existing resourceDirectory /src/src/test/resources
-#13 3.025 [INFO] 
-#13 3.025 [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ventas-lab ---
-#13 3.034 [INFO] Recompiling the module because of changed dependency.
-#13 3.035 [INFO] Compiling 1 source file with javac [debug release 21] to target/test-classes
-#13 3.242 [INFO] 
-#13 3.242 [INFO] --- surefire:3.5.2:test (default-test) @ ventas-lab ---
-#13 3.456 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
-#13 4.328 [INFO] 
-#13 4.328 [INFO] -------------------------------------------------------
-#13 4.328 [INFO]  T E S T S
-#13 4.328 [INFO] -------------------------------------------------------
-#13 4.678 [INFO] Running cl.duoc.ventas.StreamsAppTest
-#13 4.943 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 4.943 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-11195836917578499959]
-#13 5.042 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 5.042 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 5.042 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 5.042 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 5.042 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 5.142 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 5.142 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=CAMPOS_INVALIDOS topic=raw partition=0 offset=0 key=cliente-prueba detail=Campo de texto obligatorio: store
-#13 5.204 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=TOTAL_INCORRECTO topic=raw partition=0 offset=1 key=cliente-prueba detail=totalClp debe ser quantity × unitPriceClp
-#13 5.204 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=EVENT_TIME_INVALIDO topic=raw partition=0 offset=2 key=cliente-prueba detail=eventTime debe representar un instante ISO 8601 válido
-#13 5.204 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 5.204 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 5.204 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 5.204 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 5.242 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 5.242 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-11005555664860085777]
-#13 5.242 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 5.242 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 5.243 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 5.243 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 5.243 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 5.342 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 5.342 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
-#13 5.443 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=1 key=cliente-escenarios detail=No se pudo leer un único objeto JSON sin campos duplicados
-#13 5.443 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=CAMPOS_INVALIDOS topic=raw partition=0 offset=2 key=cliente-escenarios detail=Campo de texto obligatorio: store
-#13 5.443 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=TOTAL_INCORRECTO topic=raw partition=0 offset=3 key=cliente-escenarios detail=totalClp debe ser quantity × unitPriceClp
-#13 5.443 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=EVENT_TIME_INVALIDO topic=raw partition=0 offset=4 key=cliente-escenarios detail=eventTime debe representar un instante ISO 8601 válido
-#13 5.443 [main] WARN cl.duoc.ventas.DeduplicationProcessor - venta duplicada reason=EVENTO_DUPLICADO eventId=esc-1767225600-6 primero=raw-0@5 repetido=raw-0@6 key=cliente-escenarios
-#13 5.543 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
-#13 5.543 [main] INFO cl.duoc.ventas.LateEventClassifier - venta fuera de orden aceptada dentro de gracia eventId=esc-1767225600-9 store=Tienda Escenarios eventTime=2026-01-01T00:00:30Z streamTime=2026-01-01T00:01:10Z cierre=2026-01-01T00:01:30Z
-#13 5.643 [main] WARN cl.duoc.ventas.LateEventClassifier - venta tardia fuera de gracia eventId=esc-1767225600-11 store=Tienda Escenarios eventTime=2026-01-01T00:00:40Z ventana=[2026-01-01T00:00:00Z, 2026-01-01T00:01:00Z) cerro=2026-01-01T00:01:30Z streamTime=2026-01-01T00:01:40Z
-#13 5.643 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225780000 in regular mode
-#13 5.643 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 5.652 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 5.652 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 5.653 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 5.687 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 5.687 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-16788918533697642367]
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 5.687 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=0 key=cliente-prueba detail=No se pudo leer un único objeto JSON sin campos duplicados
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 5.687 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 5.743 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 5.743 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-17400904505805345556]
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 5.743 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 5.843 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
-#13 5.843 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=1 key=cliente-prueba detail=No se pudo leer un único objeto JSON sin campos duplicados
-#13 5.843 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
-#13 5.859 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 5.859 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 5.859 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 5.859 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 5.944 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 5.944 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-74650415826570855]
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 5.944 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 5.944 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
-#13 6.044 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
-#13 6.044 [main] INFO cl.duoc.ventas.LateEventClassifier - venta fuera de orden aceptada dentro de gracia eventId=en-gracia store=Tienda Prueba eventTime=2026-01-01T00:00:30Z streamTime=2026-01-01T00:01:10Z cierre=2026-01-01T00:01:30Z
-#13 6.072 [main] WARN cl.duoc.ventas.LateEventClassifier - venta tardia fuera de gracia eventId=fuera-de-gracia store=Tienda Prueba eventTime=2026-01-01T00:00:40Z ventana=[2026-01-01T00:00:00Z, 2026-01-01T00:01:00Z) cerro=2026-01-01T00:01:30Z streamTime=2026-01-01T00:01:40Z
-#13 6.072 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 6.072 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 6.072 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 6.072 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 6.144 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
-#13 6.144 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-6659807135745922603]
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
-#13 6.144 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
-#13 6.144 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
-#13 6.215 [main] WARN cl.duoc.ventas.DeduplicationProcessor - venta duplicada reason=EVENTO_DUPLICADO eventId=dup primero=raw-0@0 repetido=raw-0@1 key=cliente-prueba
-#13 6.215 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
-#13 6.215 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
-#13 6.215 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
-#13 6.215 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
-#13 6.215 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
-#13 6.230 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.546 s -- in cl.duoc.ventas.StreamsAppTest
-#13 6.246 [INFO] 
-#13 6.246 [INFO] Results:
-#13 6.246 [INFO] 
-#13 6.247 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
-#13 6.247 [INFO] 
-#13 6.250 [INFO] 
-#13 6.250 [INFO] --- jar:3.5.0:jar (default-jar) @ ventas-lab ---
-#13 6.524 [INFO] Building jar: /src/target/app.jar
-#13 6.571 [INFO] 
-#13 6.571 [INFO] --- shade:3.6.0:shade (default) @ ventas-lab ---
-#13 6.629 [INFO] Including org.apache.kafka:kafka-clients:jar:3.9.2 in the shaded jar.
-#13 6.629 [INFO] Including com.github.luben:zstd-jni:jar:1.5.6-4 in the shaded jar.
-#13 6.629 [INFO] Including at.yawk.lz4:lz4-java:jar:1.10.1 in the shaded jar.
-#13 6.629 [INFO] Including org.xerial.snappy:snappy-java:jar:1.1.10.5 in the shaded jar.
-#13 6.629 [INFO] Including org.slf4j:slf4j-api:jar:1.7.36 in the shaded jar.
-#13 6.629 [INFO] Including org.apache.kafka:kafka-streams:jar:3.9.2 in the shaded jar.
-#13 6.629 [INFO] Including org.rocksdb:rocksdbjni:jar:7.9.2 in the shaded jar.
-#13 6.629 [INFO] Including com.fasterxml.jackson.core:jackson-annotations:jar:2.16.2 in the shaded jar.
-#13 6.629 [INFO] Including com.fasterxml.jackson.core:jackson-databind:jar:2.17.2 in the shaded jar.
-#13 6.629 [INFO] Including com.fasterxml.jackson.core:jackson-core:jar:2.17.2 in the shaded jar.
-#13 6.629 [INFO] Including org.slf4j:slf4j-simple:jar:1.7.36 in the shaded jar.
-#13 7.720 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
-#13 14.70 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
-#13 14.85 [WARNING] jackson-annotations-2.16.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar define 2 overlapping resources: 
-#13 14.85 [WARNING]   - META-INF/LICENSE
-#13 14.85 [WARNING]   - META-INF/NOTICE
-#13 14.85 [WARNING] app.jar, jackson-annotations-2.16.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, kafka-clients-3.9.2.jar, kafka-streams-3.9.2.jar, lz4-java-1.10.1.jar, rocksdbjni-7.9.2.jar, slf4j-api-1.7.36.jar, slf4j-simple-1.7.36.jar, snappy-java-1.1.10.5.jar, zstd-jni-1.5.6-4.jar define 1 overlapping resource: 
-#13 14.85 [WARNING]   - META-INF/MANIFEST.MF
-#13 14.85 [WARNING] jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar define 1 overlapping classes: 
-#13 14.85 [WARNING]   - META-INF.versions.9.module-info
-#13 14.85 [WARNING] kafka-clients-3.9.2.jar, kafka-streams-3.9.2.jar define 2 overlapping resources: 
-#13 14.85 [WARNING]   - LICENSE
-#13 14.85 [WARNING]   - NOTICE
-#13 14.85 [WARNING] maven-shade-plugin has detected that some files are
-#13 14.85 [WARNING] present in two or more JARs. When this happens, only one
-#13 14.85 [WARNING] single version of the file is copied to the uber jar.
-#13 14.85 [WARNING] Usually this is not harmful and you can skip these warnings,
-#13 14.85 [WARNING] otherwise try to manually exclude artifacts based on
-#13 14.85 [WARNING] mvn dependency:tree -Ddetail=true and the above output.
-#13 14.85 [WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
-#13 14.87 [INFO] Replacing original artifact with shaded artifact.
-#13 14.87 [INFO] Replacing /src/target/app.jar with /src/target/ventas-lab-1.0.0-shaded.jar
-#13 14.87 [INFO] ------------------------------------------------------------------------
-#13 14.87 [INFO] BUILD SUCCESS
-#13 14.87 [INFO] ------------------------------------------------------------------------
-#13 14.87 [INFO] Total time:  13.555 s
-#13 14.87 [INFO] Finished at: 2026-11-23T12:30:30Z
-#13 14.87 [INFO] ------------------------------------------------------------------------
-#13 DONE 14.9s
+#13 [build 5/7] RUN mvn -q -B dependency:copy -Dartifact=io.prometheus.jmx:jmx_prometheus_javaagent:1.0.1         -DoutputDirectory=/opt/jmx -Dmdep.stripVersion=true
+#13 DONE 3.0s
 
-#14 [stage-1 2/3] WORKDIR /app
-#14 CACHED
+#14 [build 6/7] COPY src ./src
+#14 DONE 0.0s
 
-#15 [stage-1 3/3] COPY --from=build /src/target/app.jar /app/app.jar
-#15 DONE 0.1s
+#15 [build 7/7] RUN mvn -B -ntp verify
+#15 1.379 [INFO] Scanning for projects...
+#15 1.443 [INFO] 
+#15 1.443 [INFO] -------------------------< cl.duoc:ventas-lab >-------------------------
+#15 1.443 [INFO] Building ventas-lab 1.0.0
+#15 1.444 [INFO]   from pom.xml
+#15 1.444 [INFO] --------------------------------[ jar ]---------------------------------
+#15 1.722 [INFO] 
+#15 1.722 [INFO] --- resources:3.4.0:resources (default-resources) @ ventas-lab ---
+#15 1.880 [INFO] skip non existing resourceDirectory /src/src/main/resources
+#15 1.881 [INFO] 
+#15 1.881 [INFO] --- compiler:3.13.0:compile (default-compile) @ ventas-lab ---
+#15 2.011 [INFO] Recompiling the module because of changed source code.
+#15 2.021 [INFO] Compiling 11 source files with javac [debug release 21] to target/classes
+#15 3.173 [INFO] 
+#15 3.173 [INFO] --- resources:3.4.0:testResources (default-testResources) @ ventas-lab ---
+#15 3.178 [INFO] skip non existing resourceDirectory /src/src/test/resources
+#15 3.179 [INFO] 
+#15 3.179 [INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ventas-lab ---
+#15 3.187 [INFO] Recompiling the module because of changed dependency.
+#15 3.188 [INFO] Compiling 1 source file with javac [debug release 21] to target/test-classes
+#15 3.412 [INFO] 
+#15 3.412 [INFO] --- surefire:3.5.2:test (default-test) @ ventas-lab ---
+#15 3.596 [INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+#15 4.417 [INFO] 
+#15 4.417 [INFO] -------------------------------------------------------
+#15 4.417 [INFO]  T E S T S
+#15 4.417 [INFO] -------------------------------------------------------
+#15 4.804 [INFO] Running cl.duoc.ventas.StreamsAppTest
+#15 5.050 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 5.148 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-3754995423985970760]
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 5.249 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 5.349 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=CAMPOS_INVALIDOS topic=raw partition=0 offset=0 key=cliente-prueba detail=Campo de texto obligatorio: store
+#15 5.404 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=TOTAL_INCORRECTO topic=raw partition=0 offset=1 key=cliente-prueba detail=totalClp debe ser quantity × unitPriceClp
+#15 5.404 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=EVENT_TIME_INVALIDO topic=raw partition=0 offset=2 key=cliente-prueba detail=eventTime debe representar un instante ISO 8601 válido
+#15 5.404 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 5.404 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 5.404 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 5.404 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 5.449 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 5.449 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-14405271490278183970]
+#15 5.449 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 5.449 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 5.449 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 5.450 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 5.450 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 5.450 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 5.549 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
+#15 5.649 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=1 key=cliente-escenarios detail=No se pudo leer un único objeto JSON sin campos duplicados
+#15 5.649 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=CAMPOS_INVALIDOS topic=raw partition=0 offset=2 key=cliente-escenarios detail=Campo de texto obligatorio: store
+#15 5.649 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=TOTAL_INCORRECTO topic=raw partition=0 offset=3 key=cliente-escenarios detail=totalClp debe ser quantity × unitPriceClp
+#15 5.649 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=EVENT_TIME_INVALIDO topic=raw partition=0 offset=4 key=cliente-escenarios detail=eventTime debe representar un instante ISO 8601 válido
+#15 5.750 [main] WARN cl.duoc.ventas.DeduplicationProcessor - venta duplicada reason=EVENTO_DUPLICADO eventId=esc-1767225600-6 primero=raw-0@5 repetido=raw-0@6 key=cliente-escenarios
+#15 5.850 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
+#15 5.850 [main] INFO cl.duoc.ventas.LateEventClassifier - venta fuera de orden aceptada dentro de gracia eventId=esc-1767225600-9 store=Tienda Escenarios eventTime=2026-01-01T00:00:30Z streamTime=2026-01-01T00:01:10Z cierre=2026-01-01T00:01:30Z
+#15 5.950 [main] WARN cl.duoc.ventas.LateEventClassifier - venta tardia fuera de gracia eventId=esc-1767225600-11 store=Tienda Escenarios eventTime=2026-01-01T00:00:40Z ventana=[2026-01-01T00:00:00Z, 2026-01-01T00:01:00Z) cerro=2026-01-01T00:01:30Z streamTime=2026-01-01T00:01:40Z
+#15 5.950 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225780000 in regular mode
+#15 5.997 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 5.997 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 5.997 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 5.998 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 6.050 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 6.050 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-14548093273633022701]
+#15 6.050 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 6.050 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 6.050 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 6.051 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=0 key=cliente-prueba detail=No se pudo leer un único objeto JSON sin campos duplicados
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 6.051 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 6.053 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 6.150 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 6.150 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-10781220845155677863]
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 6.151 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 6.151 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
+#15 6.251 [main] WARN cl.duoc.ventas.SaleValidationProcessor - venta rechazada reason=JSON_MALFORMADO topic=raw partition=0 offset=1 key=cliente-prueba detail=No se pudo leer un único objeto JSON sin campos duplicados
+#15 6.251 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
+#15 6.290 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 6.290 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 6.291 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 6.291 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 6.351 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 6.351 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-15107742482163841113]
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 6.351 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 6.451 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
+#15 6.552 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
+#15 6.552 [main] INFO cl.duoc.ventas.LateEventClassifier - venta fuera de orden aceptada dentro de gracia eventId=en-gracia store=Tienda Prueba eventTime=2026-01-01T00:00:30Z streamTime=2026-01-01T00:01:10Z cierre=2026-01-01T00:01:30Z
+#15 6.591 [main] WARN cl.duoc.ventas.LateEventClassifier - venta tardia fuera de gracia eventId=fuera-de-gracia store=Tienda Prueba eventTime=2026-01-01T00:00:40Z ventana=[2026-01-01T00:00:00Z, 2026-01-01T00:01:00Z) cerro=2026-01-01T00:01:30Z streamTime=2026-01-01T00:01:40Z
+#15 6.591 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 6.591 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 6.591 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 6.591 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 6.652 [main] INFO org.apache.kafka.streams.kstream.internals.KTableImpl - Using grace period of [PT30S] as the suppress duration for node [cierre-de-ventana].
+#15 6.652 [main] WARN org.apache.kafka.streams.processor.internals.StateDirectory - Using an OS temp directory in the state.dir property can cause failures with writing the checkpoint file due to the fact that this directory can be cleared by the OS. Resolved state.dir: [/tmp/junit-8957205933009688459]
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store event-ids-vistos did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-event-ids-vistos-changelog-0
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store tiempo-observado did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-tiempo-observado-changelog-0
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver State store ventas-por-tienda did not find checkpoint offset, hence would default to the starting offset at changelog ventas-test-ventas-por-tienda-changelog-0
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.ProcessorStateManager - topology-test-driver Initializing to the starting offset for changelog ventas-test-cierre-de-ventana-store-changelog-0 of in-memory state store cierre-de-ventana-store
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Initialized
+#15 6.652 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Restored and ready to run
+#15 6.752 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225600000 in regular mode
+#15 6.752 [main] WARN cl.duoc.ventas.DeduplicationProcessor - venta duplicada reason=EVENTO_DUPLICADO eventId=dup primero=raw-0@0 repetido=raw-0@1 key=cliente-prueba
+#15 6.785 [main] INFO org.apache.kafka.streams.state.internals.RocksDBTimestampedStore - Opening store ventas-por-tienda.1767225660000 in regular mode
+#15 6.785 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Suspended from RUNNING
+#15 6.785 [main] INFO org.apache.kafka.streams.processor.internals.RecordCollectorImpl - topology-test-driver Closing record collector clean
+#15 6.785 [main] INFO org.apache.kafka.streams.processor.internals.StreamTask - stream-thread [main] task [0_0] Closed clean
+#15 6.785 [main] INFO org.apache.kafka.streams.processor.internals.StateDirectory - stream-thread [main] Deleting task directory 0_0 for 0_0 as user calling cleanup.
+#15 6.804 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.988 s -- in cl.duoc.ventas.StreamsAppTest
+#15 6.823 [INFO] 
+#15 6.823 [INFO] Results:
+#15 6.823 [INFO] 
+#15 6.823 [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+#15 6.823 [INFO] 
+#15 6.825 [INFO] 
+#15 6.825 [INFO] --- jar:3.5.0:jar (default-jar) @ ventas-lab ---
+#15 7.030 [INFO] Building jar: /src/target/app.jar
+#15 7.077 [INFO] 
+#15 7.077 [INFO] --- shade:3.6.0:shade (default) @ ventas-lab ---
+#15 7.143 [INFO] Including org.apache.kafka:kafka-clients:jar:3.9.2 in the shaded jar.
+#15 7.143 [INFO] Including com.github.luben:zstd-jni:jar:1.5.6-4 in the shaded jar.
+#15 7.143 [INFO] Including at.yawk.lz4:lz4-java:jar:1.10.1 in the shaded jar.
+#15 7.143 [INFO] Including org.xerial.snappy:snappy-java:jar:1.1.10.5 in the shaded jar.
+#15 7.143 [INFO] Including org.slf4j:slf4j-api:jar:1.7.36 in the shaded jar.
+#15 7.143 [INFO] Including org.apache.kafka:kafka-streams:jar:3.9.2 in the shaded jar.
+#15 7.143 [INFO] Including org.rocksdb:rocksdbjni:jar:7.9.2 in the shaded jar.
+#15 7.143 [INFO] Including com.fasterxml.jackson.core:jackson-annotations:jar:2.16.2 in the shaded jar.
+#15 7.143 [INFO] Including com.fasterxml.jackson.core:jackson-databind:jar:2.17.2 in the shaded jar.
+#15 7.143 [INFO] Including com.fasterxml.jackson.core:jackson-core:jar:2.17.2 in the shaded jar.
+#15 7.143 [INFO] Including org.slf4j:slf4j-simple:jar:1.7.36 in the shaded jar.
+#15 8.293 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+#15 15.58 [WARNING] Discovered module-info.class. Shading will break its strong encapsulation.
+#15 15.74 [WARNING] jackson-annotations-2.16.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar define 2 overlapping resources: 
+#15 15.74 [WARNING]   - META-INF/LICENSE
+#15 15.74 [WARNING]   - META-INF/NOTICE
+#15 15.74 [WARNING] app.jar, jackson-annotations-2.16.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, kafka-clients-3.9.2.jar, kafka-streams-3.9.2.jar, lz4-java-1.10.1.jar, rocksdbjni-7.9.2.jar, slf4j-api-1.7.36.jar, slf4j-simple-1.7.36.jar, snappy-java-1.1.10.5.jar, zstd-jni-1.5.6-4.jar define 1 overlapping resource: 
+#15 15.74 [WARNING]   - META-INF/MANIFEST.MF
+#15 15.74 [WARNING] jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar define 1 overlapping classes: 
+#15 15.74 [WARNING]   - META-INF.versions.9.module-info
+#15 15.74 [WARNING] kafka-clients-3.9.2.jar, kafka-streams-3.9.2.jar define 2 overlapping resources: 
+#15 15.74 [WARNING]   - LICENSE
+#15 15.74 [WARNING]   - NOTICE
+#15 15.74 [WARNING] maven-shade-plugin has detected that some files are
+#15 15.74 [WARNING] present in two or more JARs. When this happens, only one
+#15 15.74 [WARNING] single version of the file is copied to the uber jar.
+#15 15.74 [WARNING] Usually this is not harmful and you can skip these warnings,
+#15 15.74 [WARNING] otherwise try to manually exclude artifacts based on
+#15 15.74 [WARNING] mvn dependency:tree -Ddetail=true and the above output.
+#15 15.74 [WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+#15 15.75 [INFO] Replacing original artifact with shaded artifact.
+#15 15.75 [INFO] Replacing /src/target/app.jar with /src/target/ventas-lab-1.0.0-shaded.jar
+#15 15.75 [INFO] ------------------------------------------------------------------------
+#15 15.75 [INFO] BUILD SUCCESS
+#15 15.75 [INFO] ------------------------------------------------------------------------
+#15 15.76 [INFO] Total time:  14.399 s
+#15 15.76 [INFO] Finished at: 2026-11-23T13:15:19Z
+#15 15.76 [INFO] ------------------------------------------------------------------------
+#15 DONE 16.2s
 
-#16 exporting to image
-#16 exporting layers
-#16 exporting layers 1.8s done
-#16 exporting manifest sha256:dc6170a5b778b1d17f19d1e477265c91e7777cd64e259d87f1c26eaef33f025f done
-#16 exporting config sha256:e0df44ab7c0eb136432d27a37c083a760df5ca581702b3883d5350f30a0bed10 done
-#16 exporting attestation manifest sha256:1f376f5903954ae05b2fe0bcfb052eef17ffeb4c0ca4e7baa184ada70df8c961 done
-#16 exporting manifest list sha256:5c27007944dafa70ed789696374c27eb2d06935add51541f69afaeb25768b494 done
-#16 naming to docker.io/library/dsy1107-ventas-app:local done
-#16 unpacking to docker.io/library/dsy1107-ventas-app:local
-#16 unpacking to docker.io/library/dsy1107-ventas-app:local 0.3s done
-#16 DONE 2.2s
+#16 [stage-1 3/5] COPY --from=build /opt/jmx/jmx_prometheus_javaagent.jar /opt/jmx/jmx_prometheus_javaagent.jar
+#16 DONE 0.0s
 
-#17 resolving provenance for metadata file
+#17 [stage-1 4/5] COPY monitoreo/jmx/config.yml /opt/jmx/config.yml
 #17 DONE 0.0s
+
+#18 [stage-1 5/5] COPY --from=build /src/target/app.jar /app/app.jar
+#18 DONE 0.1s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 1.7s done
+#19 exporting manifest sha256:5d46b0c9c93c7539ff432998924a257c0a7dd58845224c7bc3e3b60087cc1e0f done
+#19 exporting config sha256:edb75db8a67edd1750a5070fbbda3f608c6a822d74f3f4a325a80a1f6b3552c4 done
+#19 exporting attestation manifest sha256:dfe5f353cd5884e309272648bcef6daa9ecfce373facca922ae8f07c2f7d7e5a done
+#19 exporting manifest list sha256:b139395393265848af9dd4bb3ae647b51adebd75d91908ceaa7988807290133f done
+#19 naming to docker.io/library/dsy1107-ventas-app:local done
+#19 unpacking to docker.io/library/dsy1107-ventas-app:local
+#19 unpacking to docker.io/library/dsy1107-ventas-app:local 0.3s done
+#19 DONE 2.1s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
  Image dsy1107-ventas-app:local Built 

@@ -1,0 +1,52 @@
+﻿Monitoreo local
+Fecha UTC: 2026-11-23T13:20:27.0183753Z
+
+== Targets de Prometheus ==
+kafka-brokers  kafka-2:9404     up    
+kafka-brokers  kafka-1:9404     up    
+prometheus     localhost:9090   up    
+ventas-app     producer:9406    down  Get "http://producer:9406/metrics": dial tcp: lookup producer on 127.0.0.11:53: no such host
+ventas-app     consumer:9407    up    
+zookeeper      zookeeper:9405   up    
+
+== Grafana: database=ok version=12.1.1 ==
+
+== Consultas del dashboard "EP5 - Kafka ventas (local)" (series o lineas en 30 min) ==
+OK      1  Exporters disponibles (de 5)
+OK      1  Brokers Kafka disponibles (de 2)
+OK      1  Procesos de la app disponibles (de 2)
+OK      1  Kafka Streams: threads fallidos
+OK     23  Kafka: mensajes entrantes por segundo (promedio 1 min)
+OK     23  Kafka: trafico de brokers
+OK     20  Kafka: trafico de brokers
+OK      5  JVM: heap usado (%)
+OK      5  JVM: threads activos
+OK      1  ZooKeeper: conexiones y solicitudes pendientes
+OK      4  ZooKeeper: conexiones y solicitudes pendientes
+OK      1  ZooKeeper: latencia media por conexion (maxima)
+OK      4  ZooKeeper: trafico de paquetes
+OK      4  ZooKeeper: trafico de paquetes
+OK      1  Producer: throughput y errores
+OK      1  Producer: throughput y errores
+OK      6  Kafka Streams: lag medio por topic
+OK      1  Kafka Streams: threads activos
+OK      1  Kafka Streams: particiones asignadas
+OK      2  Kafka: directorios de log fuera de linea
+OK      6  Kafka: particiones subreplicadas, bajo ISR y replicas offline
+OK     50  Logs recientes de contenedores (todos los nodos)
+OK     50  Logs con error (revisar contexto)
+OK      4  Mensajes por segundo por topico (entrada, salida, DLQ, tardios)
+OK      4  Lag de Kafka Streams por particion de ventas-raw
+OK      4  ISR: particiones subreplicadas y bajo min.insync por broker
+OK      2  ISR: particiones subreplicadas y bajo min.insync por broker
+OK      1  Kafka Streams: registros procesados y descartados
+OK      1  Kafka Streams: registros procesados y descartados
+OK      5  Logs: rechazos a la DLQ (validacion y duplicados)
+OK     34  Logs: eventos fuera de orden y tardios
+
+== Maximo de particiones subreplicadas por broker en 30 min (caida de kafka-2) ==
+kafka-1:9404   maximo=132 actual=0
+kafka-2:9404   maximo=0 actual=0
+
+Nota: producer:9406 solo esta 'up' mientras corre 'docker compose run --use-aliases producer'.
+Resultado: CORRECTO

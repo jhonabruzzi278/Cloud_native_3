@@ -1,0 +1,53 @@
+﻿Flujo normal
+Proyecto Compose: dsy1107-ep5
+Fecha UTC: 2026-11-23T13:15:47.5970657Z
+
+== ISR inicial ==
+Topic: ventas-agregadas	TopicId: uzmd9Fo0QdGfosINQTwa0g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+	Topic: ventas-agregadas	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-agregadas	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 2,1
+Topic: ventas-tardias	TopicId: 06dN5whcSCCug2xXfAoAYQ	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-tardias	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-tardias	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-raw	TopicId: 2S_ds0XrSGmEMhAy9Nwntw	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+	Topic: ventas-raw	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-raw-dlq	TopicId: Fs66faYJR1WKvWGZR5xEzg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 3	Leader: 2	Replicas: 2,1	Isr: 2,1
+
+== Productor: producer detenido tras 160 eventos
+Primeras 3 ventas enviadas:
+{"eventId":"e8041253-5657-490e-8720-7f749adad9ae","eventTime":"2026-11-23T13:15:50.517993126Z","store":"Falabella Costanera Center","storeFormat":"tienda","city":"Santiago","channel":"presencial","category":"ropa","product":"Polera algodón","quantity":3,"unitPriceClp":14390,"totalClp":43170,"customerId":"cliente-0126","paymentMethod":"crédito"}
+{"eventId":"292f780c-41bc-4728-b86d-2cc06a5b0ce2","eventTime":"2026-11-23T13:15:51.423201301Z","store":"Falabella Online","storeFormat":"online","city":"Santiago","channel":"web","category":"ropa","product":"Zapatillas running","quantity":1,"unitPriceClp":48936,"totalClp":48936,"customerId":"cliente-0125","paymentMethod":"efectivo"}
+{"eventId":"fdbcbbd6-c12c-426c-8e14-c555bc449ef1","eventTime":"2026-11-23T13:15:51.850525103Z","store":"Falabella Online","storeFormat":"online","city":"Santiago","channel":"web","category":"ropa","product":"Chaqueta cortaviento","quantity":2,"unitPriceClp":52998,"totalClp":105996,"customerId":"cliente-0054","paymentMethod":"crédito"}
+
+== Una venta en ventas-raw (particion, clave, valor) ==
+Partition:1	cliente-0069	{"eventId":"16def4d8-c13a-49d6-a8ea-05a7ded82250","eventTime":"2026-11-23T13:15:54.111486957Z","store":"Paris Marina Arauco","storeFormat":"tienda","city":"Viña del Mar","channel":"presencial","category":"ropa","product":"Zapatillas running","quantity":3,"unitPriceClp":33171,"totalClp":99513,"customerId":"cliente-0069","paymentMethod":"débito"}
+Partition:1	cliente-0017	{"eventId":"057cb1c4-430e-4ed7-a7c0-5d09aa2e3f6b","eventTime":"2026-11-23T13:15:56.111004852Z","store":"Paris Marina Arauco","storeFormat":"tienda","city":"Viña del Mar","channel":"presencial","category":"ropa","product":"Polera algodón","quantity":2,"unitPriceClp":18240,"totalClp":36480,"customerId":"cliente-0017","paymentMethod":"efectivo"}
+Partition:1	cliente-0068	{"eventId":"41d34554-ca05-4b72-8265-5e91db7f0a2d","eventTime":"2026-11-23T13:15:56.663864796Z","store":"Paris Online","storeFormat":"online","city":"Santiago","channel":"web","category":"supermercado","product":"Leche 1 L","quantity":2,"unitPriceClp":1476,"totalClp":2952,"customerId":"cliente-0068","paymentMethod":"débito"}
+
+== ventas-agregadas (clave store | resultado de la ventana): 7 registros, primeros 5 ==
+Paris Costanera Center|{"store":"Paris Costanera Center","window_start":"2026-11-23T13:15:00Z","window_end":"2026-11-23T13:16:00Z","sales_count":3,"total_clp":129655,"avg_ticket_clp":43218}
+Paris Marina Arauco|{"store":"Paris Marina Arauco","window_start":"2026-11-23T13:15:00Z","window_end":"2026-11-23T13:16:00Z","sales_count":3,"total_clp":139237,"avg_ticket_clp":46412}
+Paris Online|{"store":"Paris Online","window_start":"2026-11-23T13:15:00Z","window_end":"2026-11-23T13:16:00Z","sales_count":4,"total_clp":199053,"avg_ticket_clp":49763}
+Paris Plaza Vespucio|{"store":"Paris Plaza Vespucio","window_start":"2026-11-23T13:15:00Z","window_end":"2026-11-23T13:16:00Z","sales_count":2,"total_clp":37938,"avg_ticket_clp":18969}
+Falabella Costanera Center|{"store":"Falabella Costanera Center","window_start":"2026-11-23T13:15:00Z","window_end":"2026-11-23T13:16:00Z","sales_count":3,"total_clp":138610,"avg_ticket_clp":46203}
+
+== Consumer group (offsets, lag y asignacion de particiones) ==
+
+GROUP                 TOPIC                                        PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                                             HOST            CLIENT-ID
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 3          156             156             0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   1          32              32              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   2          35              35              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   0          42              42              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 1          77              77              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   3          51              51              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 2          -               0               -               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 0          40              40              0               StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     StreamThread-1-consumer
+
+Resultado: CORRECTO. Ventas confirmadas, agregados por tienda publicados y lag 0.

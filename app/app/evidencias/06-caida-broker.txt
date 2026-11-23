@@ -1,62 +1,62 @@
 ﻿Prueba de caida del broker 2
 Proyecto Compose: dsy1107-ep5
 
-[12:33:16Z] == ANTES: ISR con ambos brokers ==
-Topic: ventas-agregadas	TopicId: d8LlLM3lSfyI_QuNPJB7vA	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+[13:18:03Z] == ANTES: ISR con ambos brokers ==
+Topic: ventas-agregadas	TopicId: uzmd9Fo0QdGfosINQTwa0g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
 	Topic: ventas-agregadas	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
-	Topic: ventas-agregadas	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1,2
-Topic: ventas-tardias	TopicId: s1zLrvslSNS8sNyzcRZE3g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
-	Topic: ventas-tardias	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2
+	Topic: ventas-agregadas	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 2,1
+Topic: ventas-tardias	TopicId: 06dN5whcSCCug2xXfAoAYQ	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-tardias	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
 	Topic: ventas-tardias	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
-Topic: ventas-raw	TopicId: SoBZnwsJRXCU5gqaYEK-Qg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
-	Topic: ventas-raw	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2
+Topic: ventas-raw	TopicId: 2S_ds0XrSGmEMhAy9Nwntw	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+	Topic: ventas-raw	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1
 	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
-	Topic: ventas-raw	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1,2
+	Topic: ventas-raw	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1
 	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
-Topic: ventas-raw-dlq	TopicId: L51Zh3b9S_CjVZecRrepvQ	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
-	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-raw-dlq	TopicId: Fs66faYJR1WKvWGZR5xEzg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 2,1
+	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 3	Leader: 2	Replicas: 2,1	Isr: 2,1
 
 Offsets de ventas-raw antes:
-ventas-raw:0:38
-ventas-raw:1:16
-ventas-raw:2:21
-ventas-raw:3:37
+ventas-raw:0:54
+ventas-raw:1:32
+ventas-raw:2:35
+ventas-raw:3:51
 
-[12:33:29Z] == Se detiene kafka-2 con el productor enviando ==
-[12:33:43Z] == DURANTE: ISR solo con el broker 1 ==
-Topic: ventas-agregadas	TopicId: d8LlLM3lSfyI_QuNPJB7vA	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+[13:18:15Z] == Se detiene kafka-2 con el productor enviando ==
+[13:18:29Z] == DURANTE: ISR solo con el broker 1 ==
+Topic: ventas-agregadas	TopicId: uzmd9Fo0QdGfosINQTwa0g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
 	Topic: ventas-agregadas	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-agregadas	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
-Topic: ventas-tardias	TopicId: s1zLrvslSNS8sNyzcRZE3g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+Topic: ventas-tardias	TopicId: 06dN5whcSCCug2xXfAoAYQ	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
 	Topic: ventas-tardias	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-tardias	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-Topic: ventas-raw	TopicId: SoBZnwsJRXCU5gqaYEK-Qg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+Topic: ventas-raw	TopicId: 2S_ds0XrSGmEMhAy9Nwntw	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
 	Topic: ventas-raw	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-raw	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
-Topic: ventas-raw-dlq	TopicId: L51Zh3b9S_CjVZecRrepvQ	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
-	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
+Topic: ventas-raw-dlq	TopicId: Fs66faYJR1WKvWGZR5xEzg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
 
 Particiones subreplicadas durante la caida:
 	Topic: ventas-agregadas	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-agregadas	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-tardias	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-tardias	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-por-tienda-repartition	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: __transaction_state	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: __transaction_state	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: __transaction_state	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
@@ -107,14 +107,14 @@ Particiones subreplicadas durante la caida:
 	Topic: __transaction_state	Partition: 47	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: __transaction_state	Partition: 48	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: __transaction_state	Partition: 49	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-aggregator-ep5-tiempo-observado-changelog	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: ventas-aggregator-ep5-ventas-por-tienda-changelog	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-raw	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-raw	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
@@ -123,56 +123,56 @@ Particiones subreplicadas durante la caida:
 	Topic: ventas-aggregator-ep5-event-ids-vistos-changelog	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-aggregator-ep5-event-ids-vistos-changelog	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-aggregator-ep5-event-ids-vistos-changelog	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 4	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 5	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 6	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 7	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 8	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 9	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 10	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 11	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 12	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 13	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 14	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 15	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 16	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 17	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 18	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 19	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 20	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 21	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 22	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 23	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 24	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 25	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 26	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 27	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 28	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 29	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 30	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 31	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 32	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 33	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 34	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 35	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 36	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 37	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 38	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 39	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 40	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 41	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 42	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 43	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 44	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 45	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 46	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 47	Leader: 1	Replicas: 1,2	Isr: 1
-	Topic: __consumer_offsets	Partition: 48	Leader: 1	Replicas: 2,1	Isr: 1
-	Topic: __consumer_offsets	Partition: 49	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 3	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 4	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 5	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 6	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 7	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 8	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 9	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 10	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 11	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 12	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 13	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 14	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 15	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 16	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 17	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 18	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 19	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 20	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 21	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 22	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 23	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 24	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 25	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 26	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 27	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 28	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 29	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 30	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 31	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 32	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 33	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 34	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 35	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 36	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 37	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 38	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 39	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 40	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 41	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 42	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 43	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 44	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 45	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 46	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 47	Leader: 1	Replicas: 2,1	Isr: 1
+	Topic: __consumer_offsets	Partition: 48	Leader: 1	Replicas: 1,2	Isr: 1
+	Topic: __consumer_offsets	Partition: 49	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-aggregator-ep5-cierre-de-ventana-store-changelog	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1
 	Topic: ventas-aggregator-ep5-cierre-de-ventana-store-changelog	Partition: 1	Leader: 1	Replicas: 2,1	Isr: 1
 	Topic: ventas-aggregator-ep5-cierre-de-ventana-store-changelog	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1
@@ -181,71 +181,76 @@ Particiones subreplicadas durante la caida:
 Consumer group durante la caida:
 
 GROUP                 TOPIC                                        PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                                             HOST            CLIENT-ID
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 3          148             148             0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   1          33              33              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   2          34              34              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   0          51              51              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 1          81              81              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   3          54              54              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 2          8               8               0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 0          42              42              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 3          213             213             0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   1          48              48              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   2          52              52              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   0          65              65              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 1          105             105             0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   3          67              67              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 2          8               8               0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 0          60              60              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
 
-[12:33:56Z] Productor: producer detenido tras 60 eventos
+[13:18:42Z] Productor: producer detenido tras 60 eventos
 Advertencias del productor durante la caida (reconexion y cambio de lider):
+[kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Node 2 disconnected.
 [kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Node -2 disconnected.
+[kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Node 2 disconnected.
+[kafka-producer-network-thread | producer-1] WARN org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Connection to node 2 (kafka-2/172.19.0.7:9092) could not be established. Node may not be available.
+[kafka-producer-network-thread | producer-1] INFO org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Node 2 disconnected.
+[kafka-producer-network-thread | producer-1] WARN org.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Connection to node 2 (kafka-2/172.19.0.7:9092) could not be established. Node may not be available.
 
-[12:33:56Z] == Se reinicia kafka-2 ==
-[12:34:04Z] == DESPUES: ISR recuperado; los lideres quedaron en el broker 1 ==
+[13:18:42Z] == Se reinicia kafka-2 ==
+[13:18:50Z] == DESPUES: ISR recuperado; los lideres quedaron en el broker 1 ==
 	Topic: ventas-raw	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2
 	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
 	Topic: ventas-raw	Partition: 2	Leader: 1	Replicas: 2,1	Isr: 1,2
 	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
 
-[12:34:06Z] == Eleccion de lider preferido ==
-Successfully completed leader election (PREFERRED) for partitions ventas-aggregator-ep5-por-tienda-repartition-1, __consumer_offsets-46, __transaction_state-13, ventas-aggregator-ep5-tiempo-observado-changelog-2, __consumer_offsets-42, __transaction_state-17, __transaction_state-5, ventas-aggregator-ep5-cierre-de-ventana-store-changelog-1, __transaction_state-9, __consumer_offsets-30, __consumer_offsets-26, __transaction_state-1, __consumer_offsets-38, ventas-raw-0, ventas-aggregator-ep5-event-ids-vistos-changelog-1, __consumer_offsets-34, __consumer_offsets-16, __transaction_state-45, ventas-raw-dlq-2, __consumer_offsets-12, __transaction_state-49, __consumer_offsets-24, __transaction_state-37, __consumer_offsets-20, __transaction_state-41, __consumer_offsets-0, __transaction_state-29, __transaction_state-33, __consumer_offsets-8, ventas-aggregator-ep5-ventas-por-tienda-changelog-1, __transaction_state-21, __consumer_offsets-4, __transaction_state-25, __consumer_offsets-48, __transaction_state-11, __consumer_offsets-44, ventas-aggregator-ep5-ventas-por-tienda-changelog-3, __transaction_state-15, ventas-aggregator-ep5-tiempo-observado-changelog-0, ventas-aggregator-ep5-cierre-de-ventana-store-changelog-3, __transaction_state-3, __transaction_state-7, ventas-agregadas-1, ventas-aggregator-ep5-event-ids-vistos-changelog-3, __consumer_offsets-32, __consumer_offsets-28, __consumer_offsets-40, __consumer_offsets-36, ventas-raw-2, ventas-tardias-0, __transaction_state-43, __consumer_offsets-14, __transaction_state-47, ventas-raw-dlq-0, __consumer_offsets-10, __transaction_state-35, __consumer_offsets-22, __transaction_state-39, __consumer_offsets-18, __transaction_state-27, __transaction_state-31, __transaction_state-19, __consumer_offsets-6, ventas-aggregator-ep5-por-tienda-repartition-3, __transaction_state-23, __consumer_offsets-2
+[13:18:52Z] == Eleccion de lider preferido ==
+Successfully completed leader election (PREFERRED) for partitions __consumer_offsets-13, __transaction_state-13, ventas-raw-dlq-3, __consumer_offsets-9, __transaction_state-17, __consumer_offsets-21, __transaction_state-5, __consumer_offsets-17, ventas-aggregator-ep5-cierre-de-ventana-store-changelog-1, __transaction_state-9, __transaction_state-1, ventas-aggregator-ep5-ventas-por-tienda-changelog-0, __consumer_offsets-5, ventas-aggregator-ep5-por-tienda-repartition-2, ventas-raw-0, ventas-aggregator-ep5-event-ids-vistos-changelog-1, __consumer_offsets-1, ventas-aggregator-ep5-por-tienda-repartition-0, __consumer_offsets-45, __transaction_state-45, ventas-aggregator-ep5-tiempo-observado-changelog-3, __consumer_offsets-41, __transaction_state-49, __transaction_state-37, __consumer_offsets-49, __transaction_state-41, __consumer_offsets-29, __transaction_state-29, __consumer_offsets-25, __transaction_state-33, __consumer_offsets-37, __transaction_state-21, __consumer_offsets-33, __transaction_state-25, __consumer_offsets-15, __transaction_state-11, __consumer_offsets-11, __transaction_state-15, ventas-raw-dlq-1, __consumer_offsets-23, ventas-aggregator-ep5-cierre-de-ventana-store-changelog-3, __transaction_state-3, __consumer_offsets-19, __transaction_state-7, ventas-agregadas-1, ventas-aggregator-ep5-event-ids-vistos-changelog-3, __consumer_offsets-7, ventas-aggregator-ep5-ventas-por-tienda-changelog-2, __consumer_offsets-3, ventas-raw-2, __consumer_offsets-47, ventas-tardias-0, __transaction_state-43, __consumer_offsets-43, __transaction_state-47, ventas-aggregator-ep5-tiempo-observado-changelog-1, __transaction_state-35, __transaction_state-39, __consumer_offsets-31, __transaction_state-27, __consumer_offsets-27, __transaction_state-31, __consumer_offsets-39, __transaction_state-19, __consumer_offsets-35, __transaction_state-23
 
-[12:34:11Z] == DESPUES: ISR completo y lideres repartidos ==
-Topic: ventas-agregadas	TopicId: d8LlLM3lSfyI_QuNPJB7vA	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+[13:18:56Z] == DESPUES: ISR completo y lideres repartidos ==
+Topic: ventas-agregadas	TopicId: uzmd9Fo0QdGfosINQTwa0g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
 	Topic: ventas-agregadas	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
 	Topic: ventas-agregadas	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 1,2
-Topic: ventas-tardias	TopicId: s1zLrvslSNS8sNyzcRZE3g	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+Topic: ventas-tardias	TopicId: 06dN5whcSCCug2xXfAoAYQ	PartitionCount: 2	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
 	Topic: ventas-tardias	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 1,2
 	Topic: ventas-tardias	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
-Topic: ventas-raw	TopicId: SoBZnwsJRXCU5gqaYEK-Qg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
+Topic: ventas-raw	TopicId: 2S_ds0XrSGmEMhAy9Nwntw	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=604800000
 	Topic: ventas-raw	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 1,2
 	Topic: ventas-raw	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
 	Topic: ventas-raw	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 1,2
 	Topic: ventas-raw	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
-Topic: ventas-raw-dlq	TopicId: L51Zh3b9S_CjVZecRrepvQ	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
-	Topic: ventas-raw-dlq	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 1	Leader: 1	Replicas: 1,2	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 1,2
-	Topic: ventas-raw-dlq	Partition: 3	Leader: 1	Replicas: 1,2	Isr: 1,2
+Topic: ventas-raw-dlq	TopicId: Fs66faYJR1WKvWGZR5xEzg	PartitionCount: 4	ReplicationFactor: 2	Configs: min.insync.replicas=1,retention.ms=1209600000
+	Topic: ventas-raw-dlq	Partition: 0	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 1	Leader: 2	Replicas: 2,1	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 2	Leader: 1	Replicas: 1,2	Isr: 1,2
+	Topic: ventas-raw-dlq	Partition: 3	Leader: 2	Replicas: 2,1	Isr: 1,2
 
 Offsets de ventas-raw despues:
-ventas-raw:0:51
-ventas-raw:1:33
-ventas-raw:2:34
-ventas-raw:3:54
+ventas-raw:0:65
+ventas-raw:1:48
+ventas-raw:2:52
+ventas-raw:3:67
 
 Consumer group despues (LAG debe volver a 0):
 
 GROUP                 TOPIC                                        PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                                             HOST            CLIENT-ID
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 3          148             148             0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   1          33              33              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   2          34              34              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   0          51              51              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 1          81              81              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-raw                                   3          54              54              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 2          8               8               0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
-ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 0          42              42              0               ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer-1876828c-6590-4e18-9dd7-514eff711ea2 /172.19.0.5     ventas-aggregator-ep5-dfce8797-6036-407f-bfa0-b2e7cfac3b2e-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 3          213             213             0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   1          48              48              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   2          52              52              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   0          65              65              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 1          105             105             0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-raw                                   3          67              67              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 2          8               8               0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
+ventas-aggregator-ep5 ventas-aggregator-ep5-por-tienda-repartition 0          60              60              0               ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer-ea4c4680-4f4e-4198-914f-4a0ade9ca7f1 /172.19.0.9     ventas-aggregator-ep5-b5b76e21-e3c9-42f1-88ad-f08b0e16b3db-StreamThread-1-consumer
 
 Logs del consumidor durante la prueba (errores/estados):
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-1:9092 (id: 2147483646 rack: null)
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-1:9092 (id: 2147483646 rack: null)
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-1:9092 (id: 2147483646 rack: null)
+consumer-1  | [StreamThread-1] INFO cl.duoc.ventas.StreamsApp - estado Kafka Streams REBALANCING -> RUNNING
 consumer-1  | [kafka-producer-network-thread | StreamThread-1-producer] INFO org.apache.kafka.clients.producer.internals.TransactionManager - [Producer clientId=StreamThread-1-producer, transactionalId=1] Discovered group coordinator kafka-1:9092 (id: 1 rack: null)
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Group coordinator kafka-1:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-2:9092 (id: 2147483645 rack: null)
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-2:9092 (id: 2147483645 rack: null)
-consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.consumer.internals.ConsumerCoordinator - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Discovered group coordinator kafka-2:9092 (id: 2147483645 rack: null)
+consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.FetchSessionHandler - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Error sending fetch request (sessionId=734499517, epoch=403) to node 2:
+consumer-1  | org.apache.kafka.common.errors.DisconnectException
+consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.FetchSessionHandler - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Error sending fetch request (sessionId=734499517, epoch=INITIAL) to node 2:
+consumer-1  | org.apache.kafka.common.errors.DisconnectException
+consumer-1  | [StreamThread-1] INFO org.apache.kafka.clients.FetchSessionHandler - [Consumer clientId=StreamThread-1-consumer, groupId=ventas-aggregator-ep5] Error sending fetch request (sessionId=734499517, epoch=INITIAL) to node 2:
+consumer-1  | org.apache.kafka.common.errors.DisconnectException

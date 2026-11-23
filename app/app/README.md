@@ -28,7 +28,7 @@ Los DTO son records Java tipados: `Sale` (entrada), `WindowResult` (salida), `Re
 ## 2. Prerrequisitos
 
 - Docker Desktop con Docker Compose v2 en modo de contenedores Linux. Maven y Java 21 se ejecutan dentro de Docker, así que no hace falta instalarlos.
-- Windows PowerShell 5.1 o PowerShell 7 para los scripts de `scripts/`. `probar-validacion.ps1`, el primer script de la EP, requiere PowerShell 7.
+- Windows PowerShell 5.1 o PowerShell 7 para los scripts de `scripts/`.
 - Unos 3 GB de RAM libres para ZooKeeper, los dos brokers y la aplicación, y 1 GB más con el perfil `monitoreo`.
 
 ## 3. Levantar el sistema
@@ -178,13 +178,14 @@ Con el sistema levantado (sección 3), cada script publica sus datos, comprueba 
 
 | Escenario | Comando | Resultado esperado | Evidencia obtenida |
 | --- | --- | --- | --- |
-| Flujo normal | `run producer` (sección 3) | Venta con clave `customerId` en una partición. Agregado por tienda al cerrar la ventana. | [01](evidencias/01-laboratorio-base.txt): 80 envíos, lag 0, agregado de Paris Costanera con 2 ventas. |
+| Flujo normal | `./scripts/probar-flujo-base.ps1` | Venta con clave `customerId` en una partición. Agregado por tienda al cerrar la ventana. Lag 0. | [01](evidencias/01-flujo-base.txt): 160 ventas confirmadas, 7 agregados por tienda y lag 0. |
 | JSON malformado, campo ausente, total incorrecto, `eventTime` inválido | `./scripts/probar-escenarios.ps1` | El consumidor sigue activo. 4 registros en la DLQ con el original y su motivo. 4 logs correlacionables. | [04](evidencias/04-escenarios-ep5.txt): `JSON_MALFORMADO`, `CAMPOS_INVALIDOS`, `TOTAL_INCORRECTO` y `EVENT_TIME_INVALIDO`, con partición y offset. |
 | Duplicado de `eventId` | mismo script, caso `DUPLICADO` | Se cuenta una sola vez y la DLQ recibe `EVENTO_DUPLICADO` con referencia al primer registro | [04](evidencias/04-escenarios-ep5.txt): primera ventana con 3 ventas y 7.500 CLP. Sin el filtro serían 4 ventas y 10.000 CLP. |
 | Tardío dentro de gracia | caso `TARDIO_DENTRO_DE_GRACIA` (T+30 s cuando el tiempo observado es T+70 s) | Se suma a la ventana [T, T+60) | [04](evidencias/04-escenarios-ep5.txt): incluido en las 3 ventas. Log `INFO … dentro de gracia`. |
 | Tardío fuera de gracia | caso `TARDIO_FUERA_DE_GRACIA` (T+40 s cuando el tiempo observado es T+100 s) | No se suma. Queda en `ventas-tardias` y no en la DLQ. | [04](evidencias/04-escenarios-ep5.txt): venta de 9.000 CLP en `ventas-tardias`, `windowClosedAt` = T+90 s. |
-| Broker 2 detenido mientras se produce | `./scripts/probar-caida-broker.ps1` | El ISR baja a `[1]` y luego vuelve a `[1,2]`. El productor termina sin errores. Lag 0. | [06](evidencias/06-caida-broker.txt): 60 de 60 ventas confirmadas (offsets de 112 a 172) y elección de líder preferido. |
+| Broker 2 detenido mientras se produce | `./scripts/probar-caida-broker.ps1` | El ISR baja a `[1]` y luego vuelve a `[1,2]`. El productor termina sin errores. Lag 0. | [06](evidencias/06-caida-broker.txt): 60 de 60 ventas confirmadas (offsets de 172 a 232) y elección de líder preferido. |
 | Reinicio del consumidor con estado borrado | `./scripts/probar-reinicio-consumidor.ps1 -BorrarEstado` | Retoma desde los offsets confirmados y reconstruye los stores desde los changelogs. Un `eventId` previo se sigue detectando como duplicado. | [07](evidencias/07-reinicio-consumidor.txt): lag 30 → 0, logs `restauracion terminada … registros=N` y `EVENTO_DUPLICADO` tras el reinicio. |
+| Monitoreo en Grafana | `./scripts/verificar-monitoreo.ps1` (perfil `monitoreo`) | Targets `up` y todas las consultas del dashboard con datos | [02](evidencias/02-monitoreo-grafana.txt): 5 targets `up` (el productor solo existe mientras corre), 31 consultas con datos y `UnderReplicatedPartitions` de `kafka-1` con máximo 132 durante la caída y 0 después. |
 | Topología, configuración y grupos | `./scripts/inspeccionar-topicos.ps1` | Particiones, RF, ISR, retención, tópicos internos, offsets y lag | [05](evidencias/05-topicos-y-grupos.txt) |
 
 Todos los scripts aceptan `-Proyecto <nombre>`. El script de escenarios usa una tienda con sufijo horario y fija la base T en el minuto siguiente. Como el tiempo observado es por partición, conviene detener el productor aleatorio mientras se ejecuta y esperar unos 4 minutos antes de repetirlo en el mismo proyecto. Si no, la ejecución anterior ya adelantó el tiempo observado de esa partición.
@@ -198,7 +199,7 @@ Todos los scripts aceptan `-Proyecto <nombre>`. El script de escenarios usa una 
 
 ### Detalle del reinicio del consumidor
 
-Mientras Streams está detenido, el consumer group conserva sus offsets confirmados y el lag crece. En la evidencia, 30 ventas quedaron como lag 10/5/6/9. Al arrancar sin el volumen `streams-state`, cada store se reconstruye leyendo su changelog desde el offset 0 (`restauracion iniciada … pendientes=N`) antes de pasar a `RUNNING`. Después se procesan las ventas pendientes y el lag vuelve a 0. No hay pérdida silenciosa: lo que no se confirmó se reprocesa, y por EOS sus salidas parciales se descartaron. Con el volumen intacto, la restauración solo lee desde el último checkpoint y es casi inmediata.
+Mientras Streams está detenido, el consumer group conserva sus offsets confirmados y el lag crece. En la evidencia, 30 ventas quedaron como lag 7/7/9/7 en las particiones 0 a 3. Al arrancar sin el volumen `streams-state`, cada store se reconstruye leyendo su changelog desde el offset 0 (`restauracion iniciada … pendientes=N`) antes de pasar a `RUNNING`. Después se procesan las ventas pendientes y el lag vuelve a 0. No hay pérdida silenciosa: lo que no se confirmó se reprocesa, y por EOS sus salidas parciales se descartaron. Con el volumen intacto, la restauración solo lee desde el último checkpoint y es casi inmediata.
 
 ## 10. Observabilidad y operación
 
@@ -231,11 +232,11 @@ El [dashboard local](monitoreo/grafana/dashboards/ep5-local.json) es el *EA3 –
 - logs de rechazos y duplicados;
 - logs de eventos tardíos, fuera de orden y restauraciones.
 
-Verificación (23-11-2026):
+Verificación ([02-monitoreo-grafana.txt](evidencias/02-monitoreo-grafana.txt), generada con `./scripts/verificar-monitoreo.ps1`):
 
-- Los 6 targets de Prometheus quedaron `up`.
-- Todas las consultas del dashboard devolvieron datos después de ejecutar `probar-escenarios.ps1` y `probar-caida-broker.ps1`.
-- Durante la caída de `kafka-2`, el panel de ISR mostró el salto de `UnderReplicatedPartitions` en `kafka-1`, que volvió a 0 al reiniciar.
+- Todos los targets quedaron `up`, salvo el productor cuando no está corriendo.
+- Las 31 consultas del dashboard devolvieron datos después de ejecutar los scripts de escenarios y de caída del broker.
+- Durante la caída de `kafka-2`, `UnderReplicatedPartitions` llegó a 132 en `kafka-1` y volvió a 0 al reiniciar.
 
 Los indicadores *Exporters disponibles (de 5)* y *Procesos de la app (de 2)* cuentan también al productor, que solo existe mientras corre `docker compose run`. Fuera de esas ejecuciones marcan 4 y 1, en rojo.
 
@@ -256,7 +257,7 @@ La versión EC2 del curso se despliega aparte con la carpeta `monitoring/`, sigu
 - La deduplicación cubre 24 h y requiere que el duplicado conserve la misma clave `customerId`.
 - `suppress` con buffer ilimitado guarda en memoria las ventanas abiertas: una por tienda activa en los últimos 90 s. Es poco con este volumen.
 - `num.standby.replicas=0`: si se reemplaza una instancia sin su volumen, hay que restaurar desde el changelog. En la evidencia tomó unos segundos.
-- La primera evidencia ([01](evidencias/01-laboratorio-base.txt)) es anterior a la deduplicación y a la gracia de 30 s, y usó el grupo `ventas-aggregator` del laboratorio. La segunda ([02](evidencias/02-validacion-dlq.txt)) usó gracia 0. Las evidencias 03 a 07 corresponden a la versión final.
+- Todas las evidencias (01 a 07) se generaron el 23-11-2026 con la versión final, sobre un stack recreado desde cero (`down -v`), ejecutando los scripts en este orden: flujo base, escenarios, caída de broker, reinicio, monitoreo y tópicos.
 
 ## 12. Recuperación
 
